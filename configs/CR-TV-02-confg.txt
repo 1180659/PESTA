@@ -1,0 +1,1041 @@
+!
+! Last configuration change at 17:31:38 WEST Thu May 6 2021 by q023339
+! NVRAM config last updated at 16:44:15 WEST Wed May 13 2020 by q023339
+!
+version 12.4
+service timestamps debug datetime msec localtime
+service timestamps log datetime msec localtime
+service password-encryption
+!
+hostname CR-TV-02
+!
+boot-start-marker
+boot system flash disk2:c7200-jk9s-mz.124-17a.bin
+boot-end-marker
+!
+logging buffered 100000 debugging
+enable secret 5 $1$X1Wp$kiKqCh9g0hZ2ryWcY0L6f0
+!
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authentication login consolas none
+aaa authorization exec default group radius local
+aaa accounting exec default start-stop group radius
+!
+aaa session-id common
+clock summer-time WEST recurring last Sun Mar 1:00 last Sun Oct 2:00
+!
+!
+ip cef
+ip domain name rcg.telecom.pt
+ip name-server 10.156.29.225
+ip name-server 10.156.93.225
+!
+!
+clns routing
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username vmax password 7 05090A192C4D56584B
+username joaoluc password 7 03075A1F0F02
+username vitor password 7 104F0518140413
+username lcaseiro password 7 120D17181E04000B
+username ana password 7 11051C14021B05040539
+username decprj secret 5 $1$vtCZ$OM2F.z4n3ik4iJ1hturbu1
+username doprdd2 secret 5 $1$LGci$C.7vDIMuW0RC4Tm09iIf91
+archive
+ log config
+  logging enable
+  notify syslog
+  hidekeys
+!
+!
+controller SONET 2/0
+ framing sdh
+ !
+ au-4 1 tug-3 1
+  tug-2 1 e1 2 channel-group 0 timeslots 1-31
+  tug-2 1 e1 3 channel-group 0 timeslots 1-31
+  tug-2 2 e1 1 channel-group 0 timeslots 1-31
+  tug-2 2 e1 2 channel-group 0 timeslots 1-31
+  tug-2 2 e1 3 channel-group 0 timeslots 1-31
+  tug-2 3 e1 1 channel-group 0 timeslots 1-31
+  tug-2 3 e1 2 channel-group 0 timeslots 1-31
+  tug-2 3 e1 3 channel-group 0 timeslots 1-31
+  tug-2 4 e1 1 channel-group 0 timeslots 1-31
+  tug-2 4 e1 2 channel-group 0 timeslots 1-31
+  tug-2 4 e1 3 channel-group 0 timeslots 1-31
+  tug-2 5 e1 1 channel-group 0 timeslots 1-31
+  tug-2 5 e1 2 channel-group 0 timeslots 1-31
+  tug-2 5 e1 3 channel-group 0 timeslots 1-31
+  tug-2 6 e1 1 channel-group 0 timeslots 1-31
+  tug-2 6 e1 2 channel-group 0 timeslots 1-31
+  tug-2 6 e1 3 channel-group 0 timeslots 1-31
+  tug-2 7 e1 1 channel-group 0 timeslots 1-31
+  tug-2 7 e1 2 channel-group 0 timeslots 1-31
+  tug-2 7 e1 3 channel-group 0 timeslots 1-31
+ !
+ au-4 1 tug-3 2
+  tug-2 1 e1 1 channel-group 0 timeslots 1-31
+  tug-2 1 e1 2 channel-group 0 timeslots 1-31
+  tug-2 1 e1 3 channel-group 0 timeslots 1-31
+  tug-2 2 e1 1 channel-group 0 timeslots 1-31
+  tug-2 2 e1 2 channel-group 0 timeslots 1-31
+  tug-2 2 e1 3 channel-group 0 timeslots 1-31
+  tug-2 3 e1 1 channel-group 0 timeslots 1-31
+  tug-2 3 e1 2 channel-group 0 timeslots 1-31
+  tug-2 3 e1 3 channel-group 0 timeslots 1-31
+  tug-2 4 e1 1 channel-group 0 timeslots 1-31
+  tug-2 4 e1 2 channel-group 0 timeslots 1-31
+  tug-2 4 e1 3 channel-group 0 timeslots 1-31
+  tug-2 5 e1 1 channel-group 0 timeslots 1-31
+  tug-2 5 e1 2 channel-group 0 timeslots 1-31
+  tug-2 5 e1 3 channel-group 0 timeslots 1-31
+  tug-2 6 e1 1 channel-group 0 timeslots 1-31
+  tug-2 6 e1 2 channel-group 0 timeslots 1-31
+  tug-2 6 e1 3 channel-group 0 timeslots 1-31
+  tug-2 7 e1 1 channel-group 0 timeslots 1-31
+  tug-2 7 e1 2 channel-group 0 timeslots 1-31
+  tug-2 7 e1 3 channel-group 0 timeslots 1-31
+ !
+ au-4 1 tug-3 3
+  tug-2 1 e1 1 channel-group 0 timeslots 1-31
+  tug-2 1 e1 2 channel-group 0 timeslots 1-31
+  tug-2 1 e1 3 channel-group 0 timeslots 1-31
+  tug-2 2 e1 1 channel-group 0 timeslots 1-31
+  tug-2 2 e1 2 channel-group 0 timeslots 1-31
+  tug-2 2 e1 3 channel-group 0 timeslots 1-31
+  tug-2 3 e1 1 channel-group 0 timeslots 1-31
+  tug-2 3 e1 2 channel-group 0 timeslots 1-31
+  tug-2 3 e1 3 channel-group 0 timeslots 1-31
+  tug-2 4 e1 1 channel-group 0 timeslots 1-31
+  tug-2 4 e1 2 channel-group 0 timeslots 1-31
+  tug-2 4 e1 3 channel-group 0 timeslots 1-31
+  tug-2 5 e1 1 channel-group 0 timeslots 1-31
+  tug-2 5 e1 2 channel-group 0 timeslots 1-31
+  tug-2 5 e1 3 channel-group 0 timeslots 1-31
+  tug-2 6 e1 1 channel-group 0 timeslots 1-31
+  tug-2 6 e1 2 channel-group 0 timeslots 1-31
+  tug-2 6 e1 3 channel-group 0 timeslots 1-31
+  tug-2 7 e1 1 channel-group 0 timeslots 1-31
+  tug-2 7 e1 2 channel-group 0 timeslots 1-31
+  tug-2 7 e1 3 channel-group 0 timeslots 1-31
+ description Ligacao XConnect - GECA 1001365026
+!
+controller SONET 4/0
+ framing sdh
+ !
+ au-4 1 tug-3 1
+  tug-2 1 e1 1 channel-group 0 timeslots 1-31
+  tug-2 1 e1 2 channel-group 0 timeslots 1-31
+  tug-2 1 e1 3 channel-group 0 timeslots 1-31
+  tug-2 2 e1 1 channel-group 0 timeslots 1-31
+  tug-2 2 e1 2 channel-group 0 timeslots 1-31
+  tug-2 2 e1 3 channel-group 0 timeslots 1-31
+  tug-2 3 e1 1 channel-group 0 timeslots 1-31
+  tug-2 3 e1 2 channel-group 0 timeslots 1-31
+  tug-2 3 e1 3 channel-group 0 timeslots 1-31
+  tug-2 4 e1 1 channel-group 0 timeslots 1-31
+  tug-2 4 e1 2 channel-group 0 timeslots 1-31
+  tug-2 4 e1 3 channel-group 0 timeslots 1-31
+  tug-2 5 e1 1 channel-group 0 timeslots 1-31
+  tug-2 5 e1 2 channel-group 0 timeslots 1-31
+  tug-2 5 e1 3 channel-group 0 timeslots 1-31
+  tug-2 6 e1 1 channel-group 0 timeslots 1-31
+  tug-2 6 e1 2 channel-group 0 timeslots 1-31
+  tug-2 6 e1 3 channel-group 0 timeslots 1-31
+  tug-2 7 e1 1 channel-group 0 timeslots 1-31
+  tug-2 7 e1 2 channel-group 0 timeslots 1-31
+  tug-2 7 e1 3 channel-group 0 timeslots 1-31
+ !
+ au-4 1 tug-3 2
+  tug-2 1 e1 1 channel-group 0 timeslots 1-31
+  tug-2 1 e1 2 channel-group 0 timeslots 1-31
+  tug-2 1 e1 3 channel-group 0 timeslots 1-31
+  tug-2 2 e1 1 channel-group 0 timeslots 1-31
+  tug-2 2 e1 2 channel-group 0 timeslots 1-31
+  tug-2 2 e1 3 channel-group 0 timeslots 1-31
+  tug-2 3 e1 1 channel-group 0 timeslots 1-31
+  tug-2 3 e1 2 channel-group 0 timeslots 1-31
+  tug-2 3 e1 3 channel-group 0 timeslots 1-31
+  tug-2 4 e1 1 channel-group 0 timeslots 1-31
+  tug-2 4 e1 2 channel-group 0 timeslots 1-31
+  tug-2 4 e1 3 channel-group 0 timeslots 1-31
+  tug-2 5 e1 1 channel-group 0 timeslots 1-31
+  tug-2 5 e1 2 channel-group 0 timeslots 1-31
+  tug-2 5 e1 3 channel-group 0 timeslots 1-31
+  tug-2 6 e1 1 channel-group 0 timeslots 1-31
+  tug-2 6 e1 2 channel-group 0 timeslots 1-31
+  tug-2 6 e1 3 channel-group 0 timeslots 1-31
+  tug-2 7 e1 1 channel-group 0 timeslots 1-31
+  tug-2 7 e1 2 channel-group 0 timeslots 1-31
+  tug-2 7 e1 3 channel-group 0 timeslots 1-31
+ !
+ au-4 1 tug-3 3
+  tug-2 1 e1 1 channel-group 0 timeslots 1-31
+  tug-2 1 e1 2 channel-group 0 timeslots 1-31
+  tug-2 1 e1 3 channel-group 0 timeslots 1-31
+  tug-2 2 e1 1 channel-group 0 timeslots 1-31
+  tug-2 2 e1 2 channel-group 0 timeslots 1-31
+  tug-2 2 e1 3 channel-group 0 timeslots 1-31
+  tug-2 3 e1 1 channel-group 0 timeslots 1-31
+  tug-2 3 e1 2 channel-group 0 timeslots 1-31
+  tug-2 3 e1 3 channel-group 0 timeslots 1-31
+  tug-2 4 e1 1 channel-group 0 timeslots 1-31
+  tug-2 4 e1 2 channel-group 0 timeslots 1-31
+  tug-2 4 e1 3 channel-group 0 timeslots 1-31
+  tug-2 5 e1 1 channel-group 0 timeslots 1-31
+  tug-2 5 e1 2 channel-group 0 timeslots 1-31
+  tug-2 5 e1 3 channel-group 0 timeslots 1-31
+  tug-2 6 e1 1 channel-group 0 timeslots 1-31
+  tug-2 6 e1 2 channel-group 0 timeslots 1-31
+  tug-2 6 e1 3 channel-group 0 timeslots 1-31
+  tug-2 7 e1 1 channel-group 0 timeslots 1-31
+  tug-2 7 e1 2 channel-group 0 timeslots 1-31
+  tug-2 7 e1 3 channel-group 0 timeslots 1-31
+ description GECA 1001415456
+!
+ip ssh time-out 60
+ip ssh authentication-retries 1
+ip ssh version 2
+!
+!
+!
+!
+!
+interface Loopback200
+ ip address 172.20.200.241 255.255.255.255
+!
+interface GigabitEthernet0/1
+ description Uplink Optico SR-TV2
+ no ip address
+ duplex auto
+ speed auto
+ media-type gbic
+ negotiation auto
+!
+interface GigabitEthernet0/1.112
+ description Vlan 112 Core TValadim
+ encapsulation dot1Q 112
+ ip address 172.20.254.34 255.255.255.224
+ clns router isis
+ standby 2 ip 172.20.254.62
+ standby 2 priority 105
+ standby 2 preempt
+!
+interface GigabitEthernet0/1.114
+ description Vlan 114 Interligagco Radius Single-Edge
+ encapsulation dot1Q 114
+ ip address 172.20.254.85 255.255.255.248
+ standby 6 ip 172.20.254.86
+ standby 6 preempt
+!
+interface GigabitEthernet0/1.150
+ description Rede Interligacao FW-TV-01
+ encapsulation dot1Q 150
+ ip address 172.20.254.94 255.255.255.248
+ ip ospf hello-interval 1
+ ip ospf dead-interval 3
+!
+interface GigabitEthernet0/2
+ description Uplink Optico SR-TV-01
+ no ip address
+ duplex auto
+ speed auto
+ media-type gbic
+ negotiation auto
+!
+interface GigabitEthernet0/2.111
+ description Vlan 111 Core TValadim
+ encapsulation dot1Q 111
+ ip address 172.20.254.2 255.255.255.224
+ standby 2 ip 172.20.254.30
+ standby 2 priority 105
+ standby 2 preempt
+!
+interface GigabitEthernet0/2.113
+ description Vlan 113 Core TValadim
+ encapsulation dot1Q 113
+ ip address 172.20.254.77 255.255.255.240
+ standby 5 ip 172.20.254.78
+ standby 5 preempt
+!
+interface GigabitEthernet0/2.301
+ description Lan_RCG_TV
+ encapsulation dot1Q 301
+ ip address 172.20.19.92 255.255.255.224
+ clns router isis Area_B20A
+ isis priority 127 level-1
+ standby 3 ip 172.20.19.94
+ standby 3 preempt
+!
+interface GigabitEthernet0/2.302
+ description Lan2_RCG_TV
+ encapsulation dot1Q 302
+ ip address 172.20.19.125 255.255.255.224
+ clns router isis
+ standby 4 ip 172.20.19.126
+ standby 4 preempt
+!
+interface GigabitEthernet0/3
+ description Uplink Optico DSW TVPRT1SW01B
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+ no negotiation auto
+!
+interface GigabitEthernet0/3.300
+ description Interligacao DSW
+ encapsulation dot1Q 300
+ ip address 172.20.19.2 255.255.255.248
+ standby 2 ip 172.20.19.3
+ standby 2 preempt
+!
+interface Serial2/0.1/1/1/2:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/1/3:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/2/1:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/2/2:0
+ description Ligacao ER-CAA-CAM - GECA 1001365612
+ ip address 172.20.238.209 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/1/2/3:0
+ description Ligacao ER-FX-ECS - GECA 1001365609
+ ip address 172.20.238.109 255.255.255.252
+!
+interface Serial2/0.1/1/3/1:0
+ no ip address
+ shutdown
+ clns router isis
+!
+interface Serial2/0.1/1/3/2:0
+ description Ligacao ER-MST-02 - GECA 1001493119
+ ip address 172.20.238.213 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/1/3/3:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/4/1:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/4/2:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/5/1:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/5/2:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/5/3:0
+ description Ligacao ao ER-ELV - GECA 1001381457
+ ip address 172.20.238.201 255.255.255.252
+!
+interface Serial2/0.1/1/6/1:0
+ description Ligacao ER-PBL - GECA 1001365525
+ ip address 172.20.238.93 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/1/6/2:0
+ no ip address
+ shutdown
+!
+interface Serial2/0.1/1/6/3:0
+ description Ligacao ER-LVE-CRM - GECA 1001365613
+ ip address 172.20.238.1 255.255.255.252
+ ip ospf cost 200
+ clns router isis
+!
+interface Serial2/0.1/1/7/1:0
+ description Ligacao ER-EST - GECA 1001365591
+ ip address 172.20.238.5 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/1/7/2:0
+ description Ligacao ER-EV - GECA 1001365593
+ ip address 172.20.238.9 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/1/7/3:0
+ description Ligacao ER-FR - GECA 1001365594
+ ip address 172.20.238.13 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/1/1:0
+ description Ligacao ER-CAR - GECA 1001365596
+ ip address 172.20.238.17 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/1/2:0
+ description Ligacao ER-TRI - GECA 1001365597
+ ip address 172.20.238.21 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/1/3:0
+ description Ligacao ER-TMA - GECA 1001365599
+ ip address 172.20.238.25 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/2/1:0
+ description Ligacao ER-REB - GECA 1001365539
+ ip address 172.20.238.29 255.255.255.252
+!
+interface Serial2/0.1/2/2/2:0
+ description Ligacao ER-QUE - GECA 1001365559
+ ip address 172.20.238.33 255.255.255.252
+!
+interface Serial2/0.1/2/2/3:0
+ description Ligacao ER-STCM - GECA 1001365319
+ ip address 172.20.238.121 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/3/1:0
+ description Ligacao ER-POR - GECA 1001365562
+ ip address 172.20.238.41 255.255.255.252
+!
+interface Serial2/0.1/2/3/2:0
+ description Ligacao ER-OEI - GECA 1001365563
+ ip address 172.20.238.45 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/3/3:0
+ description Ligacao ER-SB - GECA 1001365602
+ ip address 172.20.238.49 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/4/1:0
+ description Ligacao ER-QRT - GECA 1001365604
+ ip address 172.20.238.53 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/4/2:0
+ description Ligacao ER-LGS - GECA 1001365606
+ ip address 172.20.238.57 255.255.255.252
+!
+interface Serial2/0.1/2/4/3:0
+ description Ligacao ER-PTM - GECA 1001365607
+ ip address 172.20.238.61 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/5/1:0
+ description Ligacao ER-LBH - GECA 1001365566
+ ip address 172.20.238.65 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/5/2:0
+ description Ligacao ER-PD - GECA 1001365535
+ ip address 172.20.238.69 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/5/3:0
+ description Ligacao ER-PTIN - GECA 1001365536
+ ip address 172.20.238.73 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/6/1:0
+ description Ligacao ER-PCS - GECA 1001365615
+ ip address 172.20.238.77 255.255.255.252
+!
+interface Serial2/0.1/2/6/2:0
+ description Ligacao ER-FX - GECA 1001365537
+ ip address 172.20.238.81 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/6/3:0
+ description Ligacao ER-FX3 - GECA 1001365538
+ ip address 172.20.238.85 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/2/7/1:0
+ description Ligacao ER-QCO - GECA 1001365528
+ ip address 172.20.238.97 255.255.255.252
+!
+interface Serial2/0.1/2/7/2:0
+ description Ligacao ER-BBA - GECA 1001365530
+ ip address 172.20.238.101 255.255.255.252
+!
+interface Serial2/0.1/2/7/3:0
+ description Ligacao ER-PAL - GECA 1001365601
+ ip address 172.20.238.37 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/1/1:0
+ description Ligacao ER-MRDL - GECA 1001365533
+ ip address 172.20.238.89 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/1/2:0
+ description Ligacao ER-SES-ECS - GECA 1001365619
+ ip address 172.20.238.105 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/1/3:0
+ description Ligacao ER-SIN-CSS - GECA 1001365534
+ ip address 172.20.238.113 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/2/1:0
+ description Ligacao ER-LOU - GECA 1001373182
+ ip address 172.20.238.125 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/2/2:0
+ description Ligacao ER-MAS - GECA 1001373192
+ ip address 172.20.238.129 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/2/3:0
+ description Ligacao ER-MMA - GECA 1001376169
+ ip address 172.20.238.133 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/3/1:0
+ description Ligacao ER-SCA - GECA 1001373228
+ ip address 172.20.238.137 255.255.255.252
+!
+interface Serial2/0.1/3/3/2:0
+ description Ligacao ER-SAC - GECA 1001373250
+ ip address 172.20.238.141 255.255.255.252
+!
+interface Serial2/0.1/3/3/3:0
+ description Ligacao ER-SIN - GECA 1001373246
+ ip address 172.20.238.145 255.255.255.252
+!
+interface Serial2/0.1/3/4/1:0
+ description Ligacao ER-GD - GECA 1001369377
+ ip address 172.20.238.149 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/4/2:0
+ description Ligacao ER-MGL - GECA 1001373335
+ ip address 172.20.238.153 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/4/3:0
+ description Ligacao ER-SEI - GECA 1001373332
+ ip address 172.20.238.157 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/5/1:0
+ description Ligacao ER-AF - GECA 1001373319
+ ip address 172.20.238.161 255.255.255.252
+!
+interface Serial2/0.1/3/5/2:0
+ description Ligacao ER-GJ - GECA 1001373325
+ ip address 172.20.238.165 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/5/3:0
+ description Ligacao ER-MA - GECA 1001374983
+ ip address 172.20.238.169 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/6/1:0
+ description Ligacao ER-OD - GECA 1001373327
+ ip address 172.20.238.173 255.255.255.252
+!
+interface Serial2/0.1/3/6/2:0
+ description Ligacao ER-SO - GECA 1001373330
+ ip address 172.20.238.177 255.255.255.252
+!
+interface Serial2/0.1/3/6/3:0
+ description Ligacao ER-SM - GECA 1001373345
+ ip address 172.20.238.181 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/7/1:0
+ description Ligacao ER-BZ - GECA 1001377820
+ ip address 172.20.238.185 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/7/2:0
+ description Ligacao ER-FML - GECA 1001373343
+ ip address 172.20.238.189 255.255.255.252
+ clns router isis
+!
+interface Serial2/0.1/3/7/3:0
+ description Ligacao ER-MONC - GECA 1001373589
+ ip address 172.20.238.193 255.255.255.252
+ clns router isis
+!
+interface ATM3/0
+ description Ligacao STM1 CR-PCS-02 (GECA 1001253644)
+ ip address 172.20.241.6 255.255.255.252
+ ip ospf network point-to-point
+ atm sonet stm-1
+ no atm ilmi-keepalive
+ clns router isis
+ pvc 1/35
+  protocol clns 47.0005.8000.0000.0000.0001.0001.0000.0cff.ff6e.00 broadcast
+  protocol ip 172.20.241.5 broadcast
+ !
+!
+interface Serial4/0.1/1/1/1:0
+ description Ligacao ao ER-VNOV - GECA 1001422003
+ ip address 172.20.239.1 255.255.255.252
+!
+interface Serial4/0.1/1/1/2:0
+ description Ligacao ao ER-SB12 - GECA 1001423985
+ ip address 172.20.239.5 255.255.255.252
+!
+interface Serial4/0.1/1/1/3:0
+ description Ligacao ao ER-CCA - GECA 1001423239
+ ip address 172.20.239.9 255.255.255.252
+!
+interface Serial4/0.1/1/2/1:0
+ description Ligacao ao ER-CPA - GECA 1001423239
+ ip address 172.20.239.13 255.255.255.252
+ clns router isis
+!
+interface Serial4/0.1/1/2/2:0
+ description Ligacao ao ER-FEI - GECA 1001423242
+ ip address 172.20.239.17 255.255.255.252
+!
+interface Serial4/0.1/1/2/3:0
+ description Ligacao ao ER-PSO - GECA 1001423250
+ ip address 172.20.239.21 255.255.255.252
+!
+interface Serial4/0.1/1/3/1:0
+ description Ligacao ao ER-STN - GECA 1001423255
+ ip address 172.20.239.25 255.255.255.252
+!
+interface Serial4/0.1/1/3/2:0
+ description Ligacao ao ER-SES - GECA 1001423257
+ ip address 172.20.239.29 255.255.255.252
+!
+interface Serial4/0.1/1/3/3:0
+ description Ligacao ao ER-SNS - GECA 1001423259
+ ip address 172.20.239.33 255.255.255.252
+ clns router isis
+!
+interface Serial4/0.1/1/4/1:0
+ description Ligacao ao ER-MDL - GECA 1001425563 testado
+ ip address 172.20.239.37 255.255.255.252
+!
+interface Serial4/0.1/1/4/2:0
+ description Ligacao ao ER-PVT - GECA 1001426052
+ ip address 172.20.239.41 255.255.255.252
+!
+interface Serial4/0.1/1/4/3:0
+ description Ligacao ao ER-SCF - GECA 1001437856
+ ip address 172.20.239.45 255.255.255.252
+ clns router isis
+!
+interface Serial4/0.1/1/5/1:0
+ description Ligacao ao ER-SMTP-ECS - GECA 1001426046 testado
+ ip address 172.20.239.49 255.255.255.252
+ clns router isis
+!
+interface Serial4/0.1/1/5/2:0
+ description Ligacao ao ER-VLPT-ECS - GECA 1001426048
+ ip address 172.20.239.53 255.255.255.252
+ clns router isis
+!
+interface Serial4/0.1/1/5/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/1/6/1:0
+ description Ligacao ao ER-PSL4-DC - GECA 1001474776
+ ip address 172.20.239.61 255.255.255.252
+!
+interface Serial4/0.1/1/6/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/1/6/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/1/7/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/1/7/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/1/7/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/1/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/1/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/1/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/2/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/2/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/2/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/3/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/3/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/3/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/4/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/4/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/4/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/5/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/5/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/5/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/6/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/6/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/6/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/7/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/7/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/2/7/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/1/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/1/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/1/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/2/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/2/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/2/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/3/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/3/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/3/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/4/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/4/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/4/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/5/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/5/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/5/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/6/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/6/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/6/3:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/7/1:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/7/2:0
+ no ip address
+ shutdown
+!
+interface Serial4/0.1/3/7/3:0
+ no ip address
+ shutdown
+!
+interface POS5/0
+ description Ligacao STM-1 p/ CR-CVL-DC-02 - GECA 1001475421
+ ip address 10.4.63.69 255.255.255.252
+ ip ospf network point-to-point
+ pos framing sdh
+!
+interface POS5/1
+ no ip address
+ shutdown
+!
+router ospf 1
+ log-adjacency-changes
+ area 109 nssa no-redistribution no-summary
+ redistribute static subnets
+ passive-interface GigabitEthernet0/2.301
+ passive-interface GigabitEthernet0/2.302
+ passive-interface GigabitEthernet0/3.300
+ network 10.4.63.68 0.0.0.3 area 0
+ network 172.20.19.0 0.0.0.255 area 0
+ network 172.20.200.241 0.0.0.0 area 0
+ network 172.20.238.0 0.0.0.255 area 103
+ network 172.20.239.0 0.0.0.255 area 104
+ network 172.20.241.4 0.0.0.3 area 0
+ network 172.20.254.0 0.0.0.63 area 0
+ network 172.20.254.64 0.0.0.15 area 0
+ network 172.20.254.80 0.0.0.7 area 0
+ network 172.20.254.88 0.0.0.7 area 109
+!
+router isis
+ net 47.0005.8000.0000.0000.0001.0001.0000.0cff.ff90.00
+!
+router isis Area_B20A
+ net 47.0005.8000.0000.0000.0001.b20a.0000.0cff.ff90.00
+ is-type level-1
+!
+ip forward-protocol nd
+ip route 10.115.0.0 255.255.0.0 GigabitEthernet0/2.301 172.20.19.79
+ip route 10.156.29.128 255.255.255.224 GigabitEthernet0/2.301 172.20.19.73
+ip route 10.156.29.224 255.255.255.224 GigabitEthernet0/2.301 172.20.19.73
+ip route 10.158.20.0 255.255.255.0 GigabitEthernet0/2.301 172.20.19.87 200
+ip route 10.159.142.0 255.255.255.0 GigabitEthernet0/3.300 172.20.19.6 name Ticket#6297
+ip route 10.164.39.48 255.255.255.240 GigabitEthernet0/2.301 172.20.19.76
+ip route 10.164.123.160 255.255.255.248 GigabitEthernet0/2.301 172.20.19.84 name ArQoS
+ip route 10.166.0.0 255.255.0.0 GigabitEthernet0/3.300 172.20.19.6 name teste
+ip route 10.166.109.0 255.255.255.0 GigabitEthernet0/3.300 172.20.19.6
+ip route 10.166.140.32 255.255.255.248 GigabitEthernet0/3.300 172.20.19.6
+ip route 10.175.248.19 255.255.255.255 GigabitEthernet0/2.113 172.20.254.69
+ip route 10.175.248.20 255.255.255.255 GigabitEthernet0/2.113 172.20.254.69
+ip route 10.175.251.0 255.255.255.0 GigabitEthernet0/2.301 172.20.19.87 name Ticket#5414
+ip route 10.175.253.64 255.255.255.192 GigabitEthernet0/2.301 172.20.19.88 name NMC_Telepac
+ip route 10.175.253.128 255.255.255.192 GigabitEthernet0/2.301 172.20.19.87 name Ticket#5414
+ip route 10.175.253.192 255.255.255.192 GigabitEthernet0/2.301 172.20.19.87 name RSE_VLAN_SRV_TV
+ip route 10.175.255.128 255.255.255.128 GigabitEthernet0/2.301 172.20.19.79
+ip route 10.176.228.0 255.255.255.0 GigabitEthernet0/2.301 172.20.19.73
+ip route 10.178.32.0 255.255.252.0 172.20.29.1
+ip route 10.181.0.0 255.255.0.0 GigabitEthernet0/2.301 172.20.19.79
+ip route 172.20.20.16 255.255.255.248 GigabitEthernet0/3.300 172.20.19.6 name Ticket10997
+ip route 172.20.29.0 255.255.255.0 GigabitEthernet0/3.300 172.20.19.6
+ip route 172.20.200.242 255.255.255.255 GigabitEthernet0/2.301 172.20.19.75
+ip route 172.30.2.128 255.255.255.128 GigabitEthernet0/2.301 172.20.19.87 name teste
+ip route 172.30.2.192 255.255.255.192 GigabitEthernet0/2.301 172.20.19.87
+!
+no ip http server
+no ip http secure-server
+!
+!
+ip radius source-interface Loopback200
+logging trap debugging
+logging facility local5
+logging source-interface Loopback200
+logging 10.156.29.225
+logging 10.156.93.225
+logging 172.20.255.50
+logging 172.18.1.69
+access-list 11 permit 10.156.29.224 0.0.0.31
+access-list 11 permit 10.156.93.224 0.0.0.31
+access-list 13 remark #### ACL HP NNM ####
+access-list 13 permit 10.162.205.3
+access-list 13 permit 10.162.205.13
+access-list 13 permit 10.162.205.11
+access-list 13 permit 10.162.205.10
+access-list 13 remark ####################
+access-list 114 permit tcp 10.156.29.224 0.0.0.31 any eq 22
+access-list 114 permit tcp 10.156.93.224 0.0.0.31 any eq 22
+access-list 114 permit tcp 172.20.0.0 0.0.255.255 any eq 22
+access-list 114 permit tcp 172.20.0.0 0.0.255.255 any eq telnet
+access-list 114 permit tcp 10.169.128.0 0.0.127.255 any eq 22
+access-list 114 permit tcp 10.169.128.0 0.0.127.255 any eq telnet
+access-list 114 permit tcp 10.175.0.0 0.0.127.255 any eq 22
+access-list 114 permit tcp 10.175.0.0 0.0.127.255 any eq telnet
+access-list 114 deny   ip any any log
+snmp-server view hpnnm-view system included
+snmp-server view hpnnm-view interfaces included
+snmp-server view hpnnm-view ip included
+snmp-server view hpnnm-view ifMIB included
+snmp-server view hpnnm-view ciscoMgmt included
+snmp-server view hpnnm-view linterfaces included
+snmp-server community hpnnm view hpnnm-view RO 13
+snmp-server community public RO 11
+snmp-server location Sala 4.23/ Fiada4/ Bastidor S04.B08B
+snmp-server chassis-id CR-TV2 <SN 72920348>
+!
+!
+!
+radius-server host 10.156.29.225 auth-port 1812 acct-port 1813 key 7 13161211190910
+radius-server host 10.156.93.225 auth-port 1812 acct-port 1813 key 7 140417081E013E
+radius-server retransmit 1
+!
+control-plane
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+banner motd ^CCCCCC
+ _______________________________________________________________________
+|                                                                       |
+|                           PORTUGAL  TELECOM                           |
+|_______________________________________________________________________|
+|                                                                       |
+|                     Rede de Comunicacoes de Gestao                    |
+|                                 RCG                                   |
+|                                                                       |
+|                               CR-TV-02                                |
+|_______________________________________________________________________|
+|                                                                       |
+|                                                                       |
+|                            Chassis S/N: 72920348                     |
+|_______________________________________________________________________|
+|                                                                       |
+|                    PERMISSAO A ACESSOS AUTORIZADOS                    |
+|               PROCEDIMENTO CRIMINAL EM CASO DE VIOLACAO               |
+|                                                                       |
+|                         LIGACAO MONITORIZADA                          |
+|_______________________________________________________________________|
+^C
+privilege interface level 5 shutdown
+privilege interface level 5 no shutdown
+privilege interface level 5 no
+privilege configure level 5 interface
+privilege exec level 4 traceroute
+privilege exec level 4 ping
+privilege exec level 5 configure terminal
+privilege exec level 5 configure
+privilege exec level 4 show users
+privilege exec level 5 show interfaces
+privilege exec level 6 show configuration
+privilege exec level 4 show
+privilege exec level 4 clear line
+privilege exec level 4 clear
+!
+line con 0
+ exec-timeout 5 0
+ stopbits 1
+line aux 0
+ exec-timeout 0 10
+ no exec
+ stopbits 1
+line vty 0 4
+ access-class 114 in
+ exec-timeout 5 0
+ logging synchronous
+ transport input telnet ssh
+ transport output all
+line vty 5
+ exec-timeout 5 0
+ transport input telnet ssh
+line vty 6 15
+ access-class 114 in
+ exec-timeout 5 0
+ transport input telnet ssh
+!
+ntp clock-period 17179990
+ntp update-calendar
+ntp server 10.156.29.225 prefer
+ntp server 10.156.93.225
+!
+end
+

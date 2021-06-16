@@ -1,0 +1,2052 @@
+
+!
+! Last configuration change at 12:37:10 GMT Thu Feb 4 2021 by lppereira
+! NVRAM config last updated at 12:37:16 GMT Thu Feb 4 2021 by lppereira
+!
+version 15.1
+no service pad
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+service compress-config
+service sequence-numbers
+!
+hostname AVR03SWG001
+!
+boot-start-marker
+boot system bootflash:cat4500e-universalk9.SPA.03.04.05.SG.151-2.SG5.bin
+boot system bootflash:cat4500e-universalk9.SPA.03.04.04.SG.151-2.SG4.bin
+boot-end-marker
+!
+!
+vrf definition mgmtVrf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+logging buffered 100000
+logging event link-status global
+enable secret 5 $1$w2Ms$WPGXNiqroIbWand/QqFTt0
+!
+username doprdd2 secret 5 $1$KCID$WpeNp7yGOgs31AX2qk7P//
+username srp44 privilege 15 password 7 12100B0317190205260B2D2D2064
+aaa new-model
+!
+!
+aaa group server radius RadiusPTINS
+ server name RadiusPTINS
+!
+aaa group server radius network-group
+ server name PTNET2
+ server name PTNET1
+ server name RadiusPTINS
+!
+aaa authentication login default group network-group group RadiusPTINS local
+aaa authentication enable default enable
+aaa authorization exec default group network-group local 
+aaa accounting exec default start-stop group network-group group RadiusPTINS
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone GMT 0 0
+clock summer-time UTC recurring last Sun Mar 1:00 last Sun Oct 1:00
+!
+switch virtual domain 234
+ switch mode virtual
+ mac-address use-virtual
+!
+no qos preserve marking hipriority
+!
+ip vrf Liin-vrf
+!
+ip multicast-routing 
+no ip domain-lookup
+ip domain-name ptin.corppt.com
+!
+!
+no ip igmp snooping
+ipv6 multicast rpf use-bgp
+!
+no cts server test all enable
+!
+crypto pki trustpoint TP-self-signed-15353
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-15353
+ revocation-check none
+ rsakeypair TP-self-signed-15353
+!
+!
+crypto pki certificate chain TP-self-signed-15353
+ certificate self-signed 01
+  30820221 3082018A A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  2C312A30 28060355 04031321 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31353335 33301E17 0D313830 36323031 37303830 305A170D 
+  32303031 30313030 30303030 5A302C31 2A302806 03550403 1321494F 532D5365 
+  6C662D53 69676E65 642D4365 72746966 69636174 652D3135 33353330 819F300D 
+  06092A86 4886F70D 01010105 0003818D 00308189 02818100 E29EE9D7 680590DD 
+  A6635951 B5691E48 6F82DBB7 E0B3B94D 223B5596 BBB07082 B27D5ED5 D68FFE16 
+  3FC7F7E5 CC658F96 A7D8784D 934AB2EE 3B4CDB4A ED389CF7 36B7594C 45E7A0DB 
+  1B98B8D2 BECC47F3 47B7DA6B A06C3826 49568647 9804D819 BE0EB8EE F49433D7 
+  E54639B1 BB72F33D FBAE6CB4 5B509768 C8FD0967 318D3B45 02030100 01A35330 
+  51300F06 03551D13 0101FF04 05300301 01FF301F 0603551D 23041830 1680146B 
+  49D7261C E7F9048E AEA50201 0B8C2AC1 429E6D30 1D060355 1D0E0416 04146B49 
+  D7261CE7 F9048EAE A502010B 8C2AC142 9E6D300D 06092A86 4886F70D 01010505 
+  00038181 0068195D CF4E1301 00134B52 A7E93B86 11366C6F 24826B33 13F64A90 
+  773BEF2E 3C61C40C EA78C029 BC933879 4E4C4BD5 1C831FA2 289093B0 D551B9E8 
+  0B5589D6 24BC285D E52ED89E D0955099 338E7132 2BFAC543 E00324BF 7D5B0940 
+  3891F9BB D482B21D 05A5B417 8BE97C07 72A00D7A 73BE41F2 38ED0173 09B38565 
+  6248C0A7 B4
+  	quit
+errdisable recovery cause bpduguard
+errdisable recovery cause psecure-violation
+power redundancy-mode redundant
+!
+mac access-list extended VSL-BPDU
+ permit any 0180.c200.0000 0000.0000.0003
+mac access-list extended VSL-CDP
+ permit any host 0100.0ccc.cccc
+mac access-list extended VSL-DOT1x
+ permit any any 0x888E
+mac access-list extended VSL-GARP
+ permit any host 0180.c200.0020
+mac access-list extended VSL-LLDP
+ permit any host 0180.c200.000e
+mac access-list extended VSL-MGMT
+ permit any host 00ff.5f6c.f028
+ permit any host 0026.0b7a.2f3c
+mac access-list extended VSL-SSTP
+ permit any host 0100.0ccc.cccd
+!
+!
+!
+!
+!
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+  hidekeys
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+spanning-tree vlan 1-4094 priority 0
+!
+redundancy
+ mode sso
+ main-cpu
+  auto-sync standard
+!
+vlan internal allocation policy ascending
+!
+vlan 1400
+ name Lig-AIB-ALticeUSA
+ mtu 1600
+lldp run
+!
+ip tftp source-interface Vlan24
+ip ssh time-out 60
+ip ssh authentication-retries 5
+!
+class-map match-any VSL-MGMT-PACKETS
+  match access-group name VSL-MGMT
+class-map match-any VSL-DATA-PACKETS
+  match any 
+class-map match-any VSL-L2-CONTROL-PACKETS
+  match access-group name VSL-DOT1x
+  match access-group name VSL-BPDU
+  match access-group name VSL-CDP
+  match access-group name VSL-LLDP
+  match access-group name VSL-SSTP
+  match access-group name VSL-GARP
+class-map match-any VSL-L3-CONTROL-PACKETS
+  match access-group name VSL-IPV4-ROUTING
+  match access-group name VSL-BFD
+  match access-group name VSL-DHCP-CLIENT-TO-SERVER
+  match access-group name VSL-DHCP-SERVER-TO-CLIENT
+  match access-group name VSL-DHCP-SERVER-TO-SERVER
+  match access-group name VSL-IPV6-ROUTING
+class-map match-any VSL-MULTIMEDIA-TRAFFIC
+  match  dscp af41 
+  match  dscp af42 
+  match  dscp af43 
+  match  dscp af31 
+  match  dscp af32 
+  match  dscp af33 
+  match  dscp af21 
+  match  dscp af22 
+  match  dscp af23 
+class-map match-all system-cpp-cdp
+  match access-group name system-cpp-cdp
+class-map match-all system-cpp-pim
+  match access-group name system-cpp-pim
+class-map match-all system-cpp-pppoe-disc
+  match access-group name system-cpp-pppoe-disc
+class-map match-any VSL-VOICE-VIDEO-TRAFFIC
+  match  dscp ef 
+  match  dscp cs4 
+  match  dscp cs5 
+class-map match-all system-cpp-bpdu-range
+  match access-group name system-cpp-bpdu-range
+class-map match-all system-cpp-hsrpv2
+  match access-group name system-cpp-hsrpv2
+class-map match-all system-cpp-dhcp-cs
+  match access-group name system-cpp-dhcp-cs
+class-map match-all system-cpp-dhcp-sc
+  match access-group name system-cpp-dhcp-sc
+class-map match-all system-cpp-all-systems-on-subnet
+  match access-group name system-cpp-all-systems-on-subnet
+class-map match-all system-cpp-all-routers-on-subnet
+  match access-group name system-cpp-all-routers-on-subnet
+class-map match-all system-cpp-ripv2
+  match access-group name system-cpp-ripv2
+class-map match-all system-cpp-mcast-cfm
+  match access-group name system-cpp-mcast-cfm
+class-map match-all system-cpp-dot1x
+  match access-group name system-cpp-dot1x
+class-map match-all system-cpp-ucast-cfm
+  match access-group name system-cpp-ucast-cfm
+class-map match-all system-cpp-dhcp-ss
+  match access-group name system-cpp-dhcp-ss
+class-map match-all system-cpp-energywise-disc
+  match access-group name system-cpp-energywise-disc
+class-map match-all system-cpp-sstp
+  match access-group name system-cpp-sstp
+class-map match-all system-cpp-ospf
+  match access-group name system-cpp-ospf
+class-map match-all system-cpp-lldp
+  match access-group name system-cpp-lldp
+class-map match-all system-cpp-igmp
+  match access-group name system-cpp-igmp
+class-map match-any VSL-SIGNALING-NETWORK-MGMT
+  match  dscp cs2 
+  match  dscp cs3 
+  match  dscp cs6 
+  match  dscp cs7 
+class-map match-all system-cpp-ip-mcast-linklocal
+  match access-group name system-cpp-ip-mcast-linklocal
+class-map match-all system-cpp-cgmp
+  match access-group name system-cpp-cgmp
+!
+policy-map system-cpp-policy
+ class system-cpp-dot1x
+ class system-cpp-lldp
+ class system-cpp-bpdu-range
+ class system-cpp-cdp
+ class system-cpp-sstp
+ class system-cpp-cgmp
+ class system-cpp-mcast-cfm
+ class system-cpp-ucast-cfm
+ class system-cpp-pppoe-disc
+ class system-cpp-ospf
+ class system-cpp-igmp
+ class system-cpp-pim
+ class system-cpp-all-systems-on-subnet
+    police 32000 1000    conform-action transmit     exceed-action drop 
+ class system-cpp-all-routers-on-subnet
+    police 32000 1000    conform-action transmit     exceed-action drop 
+ class system-cpp-ripv2
+ class system-cpp-hsrpv2
+ class system-cpp-ip-mcast-linklocal
+    police 32000 1000    conform-action transmit     exceed-action drop 
+ class system-cpp-dhcp-cs
+ class system-cpp-dhcp-sc
+ class system-cpp-dhcp-ss
+ class system-cpp-energywise-disc
+policy-map VSL-Queuing-Policy
+ class VSL-MGMT-PACKETS
+    bandwidth percent 5
+ class VSL-L2-CONTROL-PACKETS
+    bandwidth percent 5
+ class VSL-L3-CONTROL-PACKETS
+    bandwidth percent 5
+ class VSL-VOICE-VIDEO-TRAFFIC
+    bandwidth percent 30
+ class VSL-SIGNALING-NETWORK-MGMT
+    bandwidth percent 10
+ class VSL-MULTIMEDIA-TRAFFIC
+    bandwidth percent 20
+ class VSL-DATA-PACKETS
+    bandwidth percent 20
+ class class-default
+    bandwidth percent 5
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+macro global description system-cpp
+!
+interface Loopback0
+ no ip address
+!
+interface Port-channel1
+ description PO Fibras RD1
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ flowcontrol receive on
+!
+interface Port-channel2
+ description PO Fibras VSL
+ switchport
+ switchport mode trunk
+ switchport nonegotiate
+ switch virtual link 1
+!
+interface Port-channel3
+ description PO Fibras VSL
+ switchport
+ switchport mode trunk
+ switchport nonegotiate
+ switch virtual link 2
+!
+interface Port-channel4
+ description AVR03WLC001
+ switchport
+ switchport trunk native vlan 13
+ switchport trunk allowed vlan 13,194,197,200,204,701
+ switchport mode trunk
+!
+interface Port-channel5
+ description AVR03WLC002
+ switchport
+ switchport trunk native vlan 13
+ switchport trunk allowed vlan 13,194,197,200,204,701
+ switchport mode trunk
+!
+interface Port-channel6
+ description PO Fibras E0A0 Avr03swd001
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel7
+ description PO Fibras E0A1
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel8
+ description PO Fibras E0A2
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel9
+ description PO Fibras E0A3
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel10
+ description PO Fibras E0A4
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel11
+ description PO Fibras E1A0
+ switchport
+ switchport trunk allowed vlan 1-899,901-4094
+ switchport mode trunk
+!
+interface Port-channel12
+ description PO Fibras E2A0
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel13
+ description PO Fibras STE3
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface Port-channel14
+ description Nexus
+ switchport
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface FastEthernet1
+ vrf forwarding mgmtVrf
+ no ip address
+ speed auto
+ duplex auto
+!
+interface TenGigabitEthernet1/1/1
+ description FO RD1 (12.17/18)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet1/1/2
+ description Enclosure P_chkp
+!
+interface TenGigabitEthernet1/1/3
+ description E0A0-FO1,2 (12.11)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 6 mode active
+!
+interface TenGigabitEthernet1/1/4
+ description E0A1-FO 3,4 (12.142)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 7 mode active
+!
+interface TenGigabitEthernet1/1/5
+ description E0A2-FO 5,6 (12.12)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 8 mode active
+!
+interface TenGigabitEthernet1/1/6
+ description E0A3-FO 7,8 (12.10)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 9 mode active
+!
+interface TenGigabitEthernet1/1/7
+ description E0A4-FO 9,10 (12.14)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 10 mode active
+!
+interface TenGigabitEthernet1/1/8
+ description E1A0-FO 11,12 (12.15)
+ switchport trunk allowed vlan 1-899,901-4094
+ switchport mode trunk
+ mtu 1600
+!
+interface TenGigabitEthernet1/1/9
+ description Liga E2A0-(12.16)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 12 mode active
+!
+interface TenGigabitEthernet1/1/10
+ description STE3-(12.6)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 13 mode active
+!
+interface TenGigabitEthernet1/1/11
+ description Refeitorio-(12.145)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ switchport priority extend trust
+ qos trust extend
+!
+interface TenGigabitEthernet1/1/12
+ description E1A2-(G0/23 12.221-AVR03SWA123)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ switchport priority extend trust
+ qos trust extend
+!
+interface TenGigabitEthernet1/3/1
+ description RD3-Te2/3/1-VSL
+ switchport mode trunk
+ switchport nonegotiate
+ no lldp transmit
+ no lldp receive
+ no cdp enable
+ channel-group 2 mode on
+ service-policy output VSL-Queuing-Policy
+!
+interface TenGigabitEthernet1/3/2
+ description RD3-Te2/3/2 -VSL
+ switchport mode trunk
+ switchport nonegotiate
+ no lldp transmit
+ no lldp receive
+ no cdp enable
+ channel-group 2 mode on
+ service-policy output VSL-Queuing-Policy
+!
+interface TenGigabitEthernet1/3/3
+ description SW-RD2-N5K-L3-43
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 14 mode active
+!
+interface TenGigabitEthernet1/3/4
+ description SW-RD2-N5K-L3-43
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 14 mode active
+!
+interface GigabitEthernet1/7/1
+ description RTC 3945-G0/0
+ switchport access vlan 11
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface GigabitEthernet1/7/2
+ description Ligacao OLT-SFR - para router avr03rtr001
+ switchport trunk allowed vlan 1,2,952,953,1002-1005,1400
+ switchport mode trunk
+ mtu 1600
+!
+interface GigabitEthernet1/7/3
+!
+interface GigabitEthernet1/7/4
+ description ligagco temp r2
+ switchport access vlan 10
+!
+interface GigabitEthernet1/7/5
+ description RD2-Fortigate P3 (vlan pub+dmz)
+ switchport trunk allowed vlan 3,29,192,248,500
+ switchport mode trunk
+!
+interface GigabitEthernet1/7/6
+!
+interface GigabitEthernet1/7/7
+ description fotigate port2 - monitoria PTNET temp
+ switchport access vlan 11
+ switchport trunk allowed vlan 11
+ switchport mode access
+!
+interface GigabitEthernet1/7/8
+!
+interface GigabitEthernet1/7/9
+ description RT-RD2-INT-126 IT
+ switchport access vlan 550
+ switchport mode access
+!
+interface GigabitEthernet1/7/10
+ description RT-RD2-VPN-177 IT
+ switchport access vlan 550
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/11
+ description RT-RD2-INT-126
+ switchport access vlan 500
+ switchport mode access
+!
+interface GigabitEthernet1/7/12
+ description RT-RD2-VPN-177
+ switchport access vlan 600
+ switchport mode access
+!
+interface GigabitEthernet1/7/13
+ description FW-RD2-INT-252 OUTSIDE
+ switchport access vlan 500
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/14
+ description FW-RD2-RA-251 OUTSIDE
+ switchport access vlan 600
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/15
+ description FW-RD2-L2L-250 OUTSIDE
+ switchport access vlan 600
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/16
+ description FW-RD2-INT-252 INSIDE
+ switchport access vlan 3
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/17
+ description FW-RD2-RA-251 INSIDE
+ switchport access vlan 3
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/18
+ description FW-RD2-L2L-250 INSIDE
+ switchport access vlan 3
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/19
+ description FW-RD2-INT-252 DMZ
+ switchport access vlan 192
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/20
+ description FW-RD2-RA-251 DMZ
+ switchport trunk native vlan 192
+ switchport trunk allowed vlan 192,550
+ switchport mode trunk
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/21
+ description FW-RD2-L2L-250 DMZ
+ switchport trunk native vlan 192
+ switchport trunk allowed vlan 192,550
+ switchport mode trunk
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/22
+ description FW-RD2-INT-252 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/23
+ description FW-RD2-RA-251 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/24
+ description FW-RD2-L2L-250 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/25
+ description AVR03WLC001 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7/26
+ description AVR03WLC001 RD2 S1
+ switchport trunk native vlan 13
+ switchport trunk allowed vlan 13,194,197,200,204,701
+ switchport mode trunk
+ channel-group 4 mode on
+!
+interface GigabitEthernet1/7/27
+ description AVR03WLC002 RD2 S2
+ switchport trunk native vlan 13
+ switchport trunk allowed vlan 13,194,197,200,204,701
+ switchport mode trunk
+ channel-group 5 mode on
+!
+interface GigabitEthernet1/7/28
+!
+interface GigabitEthernet1/7/29
+ description vis06swa001 - Gi0/48 - Geca 1001519980 - IXS.18.59946
+ switchport trunk allowed vlan 2,9,33,1000
+ switchport mode trunk
+ load-interval 30
+ duplex full
+!
+interface GigabitEthernet1/7/30
+!
+interface GigabitEthernet1/7/31
+!
+interface GigabitEthernet1/7/32
+!
+interface GigabitEthernet1/7/33
+!
+interface GigabitEthernet1/7/34
+!
+interface GigabitEthernet1/7/35
+!
+interface GigabitEthernet1/7/36
+!
+interface GigabitEthernet1/7/37
+ switchport access vlan 550
+ switchport mode access
+!
+interface GigabitEthernet1/7/38
+!
+interface GigabitEthernet1/7/39
+!
+interface GigabitEthernet1/7/40
+!
+interface GigabitEthernet1/7/41
+!
+interface GigabitEthernet1/7/42
+!
+interface GigabitEthernet1/7/43
+ description fortinet - VPN IP Interno
+ switchport access vlan 3
+ switchport trunk allowed vlan 3
+ switchport mode trunk
+!
+interface GigabitEthernet1/7/44
+ description fortinet - VPN IP pub
+ switchport access vlan 600
+ switchport mode access
+!
+interface GigabitEthernet1/7/45
+!
+interface GigabitEthernet1/7/46
+!
+interface GigabitEthernet1/7/47
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet1/7/48
+ switchport trunk allowed vlan 2,3,29,500,550,600
+ switchport mode trunk
+!
+interface TenGigabitEthernet2/1/1
+ description Liga FO RD1 (12.17/18)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet2/1/2
+ description Enclosure RLourenco
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ switchport priority extend trust
+ shutdown
+ qos trust extend
+!
+interface TenGigabitEthernet2/1/3
+ description Liga E0A0-(12.11)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 6 mode active
+!
+interface TenGigabitEthernet2/1/4
+ description Liga E0A1- (12.142)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 7 mode active
+!
+interface TenGigabitEthernet2/1/5
+ description Liga  E0A2-(12.12)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 8 mode active
+!
+interface TenGigabitEthernet2/1/6
+ description Liga  E0A3-(12.10)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 9 mode active
+!
+interface TenGigabitEthernet2/1/7
+ description Liga E0A4-(12.14)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 10 mode active
+!
+interface TenGigabitEthernet2/1/8
+ description Liga E1A0-(12.15)
+ switchport trunk allowed vlan 1-899,901-4094
+ switchport mode trunk
+ shutdown
+ spanning-tree cost 10000
+!
+interface TenGigabitEthernet2/1/9
+ description Liga E2A0-(12.16)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 12 mode active
+!
+interface TenGigabitEthernet2/1/10
+ description Liga STE3-(12.6)
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 13 mode active
+!
+interface TenGigabitEthernet2/1/11
+!
+interface TenGigabitEthernet2/1/12
+!
+interface TenGigabitEthernet2/3/1
+ description RD2-Te2/3/1-VSL
+ switchport mode trunk
+ switchport nonegotiate
+ no lldp transmit
+ no lldp receive
+ no cdp enable
+ channel-group 3 mode on
+ service-policy output VSL-Queuing-Policy
+!
+interface TenGigabitEthernet2/3/2
+ description RD2-Te2/3/2-VSL
+ switchport mode trunk
+ switchport nonegotiate
+ no lldp transmit
+ no lldp receive
+ no cdp enable
+ channel-group 3 mode on
+ service-policy output VSL-Queuing-Policy
+!
+interface TenGigabitEthernet2/3/3
+ description SW-RD3-N5K-L3-44
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 14 mode active
+!
+interface TenGigabitEthernet2/3/4
+ description SW-RD3-N5K-L3-44
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+ channel-group 14 mode active
+!
+interface GigabitEthernet2/7/1
+ description avr03rtr002 gi0/0
+ switchport trunk allowed vlan 11,612,613
+ switchport mode trunk
+!
+interface GigabitEthernet2/7/2
+ description Ligacao OLT-SFR - para router avr03rtr002 backup
+ switchport trunk allowed vlan 1,2,952,1002-1005
+ switchport mode trunk
+ shutdown
+!
+interface GigabitEthernet2/7/3
+ description RTCentral 3945 G0/1/1 (AVAC REST)
+ switchport access vlan 900
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet2/7/4
+ description ligagco temp r2
+ switchport access vlan 10
+!
+interface GigabitEthernet2/7/5
+ description RD2-Fortigate P3 (vlan pub+dmz)
+ switchport trunk allowed vlan 3,29,192,248,500
+ switchport mode trunk
+!
+interface GigabitEthernet2/7/6
+!
+interface GigabitEthernet2/7/7
+ description fotigate port2 - monitoria PTNET temp
+ switchport trunk allowed vlan 11
+ switchport mode trunk
+!
+interface GigabitEthernet2/7/8
+!
+interface GigabitEthernet2/7/9
+ description RT-RD3-INT-126 IT 
+ switchport access vlan 550
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/10
+ description RT-RD3-VPN-177 IT
+ switchport access vlan 550
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/11
+ description RT-RD3-INT-126
+ switchport access vlan 500
+ switchport mode access
+!
+interface GigabitEthernet2/7/12
+ description RT-RD3-VPN-177
+ switchport access vlan 600
+ switchport mode access
+!
+interface GigabitEthernet2/7/13
+ description FW-RD3-INT-252 OUTSIDE
+ switchport access vlan 500
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/14
+ description FW-RD3-RA-251 OUTSIDE
+ switchport access vlan 600
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/15
+ description FW-RD3-L2L-250 OUTSIDE
+ switchport access vlan 600
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/16
+ description FW-RD3-INT-252 INSIDE
+ switchport access vlan 3
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/17
+ description FW-RD3-RA-251 INSIDE
+ switchport access vlan 3
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/18
+ description FW-RD3-L2L-250 INSIDE
+ switchport access vlan 3
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/19
+ description FW-RD3-INT-252 DMZ
+ switchport access vlan 192
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/20
+ description FW-RD3-RA-251 DMZ
+ switchport access vlan 192
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/21
+ description FW-RD3-L2L-250 DMZ
+ switchport access vlan 192
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/22
+ description FW-RD3-INT-252 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/23
+ description FW-RD3-RA-251 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/24
+ description FW-RD3-L2L-250 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/25
+ description AVR03WLC001 MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/26
+ description AVR03WLC001 RD3 S2
+ switchport trunk native vlan 13
+ switchport trunk allowed vlan 13,194,197,200,204,701
+ switchport mode trunk
+ channel-group 4 mode on
+!
+interface GigabitEthernet2/7/27
+ description AVR03WLC002 RD3 S1
+ switchport trunk native vlan 13
+ switchport trunk allowed vlan 13,194,197,200,204,701
+ switchport mode trunk
+ channel-group 5 mode on
+!
+interface GigabitEthernet2/7/28
+!
+interface GigabitEthernet2/7/29
+!
+interface GigabitEthernet2/7/30
+!
+interface GigabitEthernet2/7/31
+!
+interface GigabitEthernet2/7/32
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet2/7/33
+!
+interface GigabitEthernet2/7/34
+!
+interface GigabitEthernet2/7/35
+!
+interface GigabitEthernet2/7/36
+ switchport trunk allowed vlan 2
+ switchport mode trunk
+!
+interface GigabitEthernet2/7/37
+ description MCU
+ switchport access vlan 160
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/38
+ description VCS
+ switchport access vlan 160
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/39
+ description VCS DMZ
+ switchport access vlan 192
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/40
+!
+interface GigabitEthernet2/7/41
+!
+interface GigabitEthernet2/7/42
+!
+interface GigabitEthernet2/7/43
+ description NLB CSS MGMT
+ switchport access vlan 9
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet2/7/44
+ description NLB CSS
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface GigabitEthernet2/7/45
+ description NLB CSS
+ switchport trunk allowed vlan 1-951,953-4094
+ switchport mode trunk
+!
+interface GigabitEthernet2/7/46
+!
+interface GigabitEthernet2/7/47
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet2/7/48
+ switchport access vlan 29
+ switchport trunk allowed vlan 2,3,29,500,550,600
+ switchport mode trunk
+!
+interface Vlan1
+ description Default
+ no ip address
+!
+interface Vlan2
+ description Equipamentos Rede
+ ip address 10.112.12.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan3
+ description VPN Remote Access
+ ip address 10.112.10.254 255.255.255.0
+ no ip redirects
+ ip igmp query-interval 25
+!
+interface Vlan8
+ description Gestao de Servidores
+ ip address 10.112.8.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan9
+ description Wireless e Seguranca
+ ip address 10.112.9.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan11
+ description Gateway e Backbone
+ ip address 10.112.11.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan13
+ description Vlan dos AP
+ ip address 10.112.13.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan14
+ description Servidores (Desenvolvimento)
+ ip address 10.112.14.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan15
+ description Servidores (Producao)
+ ip address 10.112.15.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan16
+ description Restaurante
+ ip address 10.112.16.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan24
+ ip address 10.112.24.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan30
+ description O&M NGIN
+ ip address 10.112.30.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan32
+ ip address 10.112.32.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan33
+ description Polo Viseu
+ ip address 10.112.33.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ ip helper-address 10.23.96.3
+ no ip redirects
+ load-interval 30
+!
+interface Vlan34
+ ip address 10.112.34.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan40
+ ip address 10.112.40.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan41
+ ip address 10.112.41.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan42
+ ip address 10.112.42.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan43
+ ip address 10.112.43.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan44
+ ip address 10.112.44.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan45
+ description Vlan desenvolvimento DSR-IES
+ ip address 10.112.45.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan46
+ description Vlan Testes DSR-IES
+ ip address 10.112.46.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan48
+ ip address 10.112.48.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan49
+ description Desenvolvimento DRI
+ ip address 10.112.49.254 255.255.255.0
+ ip helper-address 10.112.99.201
+ ip helper-address 10.112.99.202
+ no ip redirects
+ shutdown
+!
+interface Vlan57
+ ip address 10.112.57.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan58
+ description ITCenter
+ ip address 10.112.58.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan62
+ description Utilizadores Corppt
+ ip address 10.112.62.254 255.255.255.0
+ ip helper-address 10.20.48.3
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ ip helper-address 10.112.15.165
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan64
+ ip address 10.112.64.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan66
+ description Rede Telefones SIP DPM
+ ip address 10.112.66.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan67
+ description Desenvolvimento DPM
+ ip address 10.112.67.254 255.255.255.0
+ ip helper-address 10.112.99.202
+ ip helper-address 10.112.99.201
+ no ip redirects
+!
+interface Vlan70
+ description DINO
+ ip address 10.112.70.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan72
+ ip address 10.112.72.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan73
+ description Testes IAD
+ ip address 10.112.73.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan76
+ description CTE-DEV
+ ip address 10.112.76.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan77
+ description CTE-OpenStack
+ ip address 10.112.77.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan80
+ ip address 10.112.80.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan81
+ description Gestao SSO
+ ip address 10.112.81.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan82
+ ip address 10.112.82.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan83
+ description Desenvolvimento SSO
+ ip address 10.112.83.254 255.255.255.0
+ ip helper-address 10.112.99.201
+ ip helper-address 10.112.99.202
+ no ip redirects
+!
+interface Vlan84
+ description Testes SSO
+ ip address 10.112.84.254 255.255.255.0
+ ip helper-address 10.112.99.201
+ ip helper-address 10.112.99.202
+ no ip redirects
+!
+interface Vlan85
+ description Instalacao SSO
+ ip address 10.112.85.254 255.255.255.0
+ ip helper-address 10.112.99.201
+ ip helper-address 10.112.99.202
+ no ip redirects
+!
+interface Vlan88
+ ip address 10.112.88.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan90
+ ip address 10.112.90.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.112.15.152
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan91
+ description KVM-DEV-PXE
+ ip address 10.112.91.254 255.255.255.0
+!
+interface Vlan92
+ description KVM-DEV-VMs
+ ip address 10.112.95.254 255.255.252.0
+!
+interface Vlan96
+ ip address 10.112.96.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan97
+ description Desenvolvimento SSN
+ ip address 10.112.97.254 255.255.255.0
+ ip helper-address 10.112.99.201
+ ip helper-address 10.112.99.202
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan100
+ description Producao SSN
+ ip address 10.112.102.254 255.255.252.0 secondary
+ ip address 10.112.101.254 255.255.252.0 secondary
+ ip address 10.112.100.254 255.255.252.0 secondary
+ ip address 10.112.103.254 255.255.252.0
+ ip helper-address 10.112.99.201
+ ip helper-address 10.112.99.202
+ no ip redirects
+!
+interface Vlan104
+ ip address 10.112.104.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan105
+ ip address 10.112.105.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+interface Vlan106
+ description ISR-LAB-HAlves-CCovelo
+ ip address 10.112.106.254 255.255.255.0
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan107
+ description VideoPoint
+ ip address 10.112.107.254 255.255.255.0
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan108
+ description ISR
+ ip address 10.112.108.254 255.255.255.0
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan109
+ description Vlan ISR-RDT
+ ip address 10.112.109.254 255.255.255.0
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan150
+ description MTV
+ ip address 10.112.150.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan151
+ description MTV-LAB
+ ip address 10.112.151.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan160
+ description RSG
+ ip address 10.112.160.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan161
+ description TVCorp
+ ip address 10.112.161.254 255.255.255.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+!
+interface Vlan162
+ description CopyPoint
+ ip address 10.112.162.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+!
+interface Vlan181
+ ip address 10.112.181.1 255.255.255.0
+ no ip redirects
+!
+interface Vlan183
+ ip address 10.112.183.1 255.255.255.0
+ no ip redirects
+!
+interface Vlan184
+ ip address 10.112.184.1 255.255.255.0
+ no ip redirects
+!
+interface Vlan185
+ ip address 10.112.185.1 255.255.255.0
+ no ip redirects
+!
+interface Vlan197
+ description MEO1MTV
+ ip address 10.112.197.254 255.255.255.0
+ no ip redirects
+!
+interface Vlan200
+ description PTIN-WRL
+ ip address 10.112.203.254 255.255.252.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan204
+ description PTwireless
+ ip address 10.112.204.254 255.255.255.0
+ ip helper-address 10.162.140.21
+ ip helper-address 10.166.140.22
+!
+interface Vlan221
+ ip address 10.112.221.254 255.255.255.0
+!
+interface Vlan240
+ description SONATA
+ ip address 172.31.6.250 255.255.255.0
+ ip access-group SONATA in
+ no ip redirects
+!
+interface Vlan248
+ no ip address
+ shutdown
+!
+interface Vlan250
+ description PTSI
+ ip address 10.112.250.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ ip helper-address 10.23.96.3
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+ ip pim sparse-dense-mode
+!
+interface Vlan251
+ description Callcenter distribuido dados
+ ip address 10.112.251.254 255.255.255.0
+ ip helper-address 10.112.15.165
+ ip helper-address 10.156.6.35
+ ip helper-address 10.20.48.3
+ ip helper-address 10.23.96.3
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+!
+interface Vlan451
+ description Callcenter distribuido voz
+ ip address 10.20.209.254 255.255.255.0
+ ip helper-address 10.156.6.35
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+!
+interface Vlan462
+ description Ex-Combatentes-voip
+ ip address 10.20.208.254 255.255.255.128
+ ip helper-address 10.20.48.3
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+!
+interface Vlan1000
+ description VoIP
+ ip address 10.23.99.254 255.255.252.0
+ ip helper-address 10.23.96.3
+ ip helper-address 10.112.15.165
+ ip helper-address 10.23.96.14
+ ip helper-address 10.18.27.10
+ ip helper-address 10.114.149.4
+ no ip redirects
+!
+interface Vlan1001
+ description VoIP ABC
+ ip address 10.23.111.254 255.255.252.0
+ ip helper-address 10.112.15.165
+ no ip redirects
+!
+ip default-gateway 10.112.11.253
+ip forward-protocol udp bootpc
+ip forward-protocol udp bootps
+ip http server
+ip http authentication aaa login-authentication default
+ip http authentication aaa exec-authorization default
+ip http secure-server
+!
+ip route 2.2.2.2 255.255.255.255 10.112.10.251
+ip route 10.0.2.0 255.255.255.0 10.112.10.251
+ip route 10.0.5.0 255.255.255.0 10.112.10.251
+ip route 10.0.212.0 255.255.255.0 10.112.12.206
+ip route 10.1.22.0 255.255.255.0 10.112.10.251
+ip route 10.1.70.0 255.255.255.240 10.112.10.251
+ip route 10.1.70.32 255.255.255.224 10.112.10.251
+ip route 10.1.151.0 255.255.255.128 10.112.8.238
+ip route 10.2.1.96 255.255.255.224 10.112.10.251
+ip route 10.2.151.0 255.255.255.128 10.112.8.233
+ip route 10.2.210.0 255.255.255.0 10.112.12.206
+ip route 10.3.50.131 255.255.255.255 10.112.11.253
+ip route 10.3.53.11 255.255.255.255 10.112.11.253
+ip route 10.3.96.105 255.255.255.255 10.112.11.253
+ip route 10.3.151.0 255.255.255.128 10.112.8.243
+ip route 10.8.8.0 255.255.255.0 10.112.10.251
+ip route 10.8.9.0 255.255.255.0 10.112.10.251
+ip route 10.11.170.0 255.255.255.0 10.112.10.251
+ip route 10.11.171.0 255.255.255.0 10.112.10.251
+ip route 10.11.176.0 255.255.255.0 10.112.10.251
+ip route 10.11.177.132 255.255.255.255 10.112.10.251
+ip route 10.11.177.133 255.255.255.255 10.112.10.251
+ip route 10.11.178.192 255.255.255.192 10.112.10.251
+ip route 10.11.179.0 255.255.255.0 10.112.10.251
+ip route 10.11.184.192 255.255.255.192 10.112.10.251
+ip route 10.11.199.0 255.255.255.0 10.112.10.251
+ip route 10.12.40.0 255.255.255.0 10.112.10.251
+ip route 10.13.40.0 255.255.255.0 10.112.10.251
+ip route 10.14.40.0 255.255.255.0 10.112.10.251
+ip route 10.16.1.32 255.255.255.224 10.112.10.251
+ip route 10.16.1.128 255.255.255.224 10.112.10.251
+ip route 10.16.1.160 255.255.255.224 10.112.10.251
+ip route 10.16.1.192 255.255.255.224 10.112.10.251
+ip route 10.16.5.0 255.255.255.0 10.112.10.251
+ip route 10.16.6.0 255.255.255.192 10.112.10.251
+ip route 10.16.8.0 255.255.255.224 10.112.10.251
+ip route 10.16.9.0 255.255.255.224 10.112.10.251
+ip route 10.16.12.0 255.255.255.224 10.112.10.251
+ip route 10.16.14.0 255.255.255.0 10.112.10.251
+ip route 10.16.18.0 255.255.255.0 10.112.10.251
+ip route 10.16.20.0 255.255.255.0 10.112.10.251
+ip route 10.16.41.0 255.255.255.0 10.112.10.251
+ip route 10.17.27.0 255.255.255.0 10.112.10.251
+ip route 10.17.144.144 255.255.255.240 10.112.11.253
+ip route 10.17.199.31 255.255.255.255 10.112.11.253
+ip route 10.18.161.176 255.255.255.240 10.112.11.253
+ip route 10.19.72.0 255.255.255.0 10.112.10.251
+ip route 10.19.152.80 255.255.255.240 10.112.10.245
+ip route 10.19.152.85 255.255.255.255 10.112.10.245 name teste
+ip route 10.19.248.0 255.255.254.0 10.112.10.245
+ip route 10.26.33.0 255.255.255.0 10.112.10.251
+ip route 10.26.78.0 255.255.255.0 10.112.10.251
+ip route 10.26.144.0 255.255.255.0 10.112.10.251
+ip route 10.26.168.0 255.255.255.0 10.112.10.251
+ip route 10.26.169.0 255.255.255.0 10.112.10.251
+ip route 10.26.176.128 255.255.255.224 10.112.10.251
+ip route 10.26.187.0 255.255.255.0 10.112.10.251
+ip route 10.27.14.0 255.255.255.0 10.112.10.251
+ip route 10.27.231.0 255.255.255.0 10.112.10.251
+ip route 10.30.0.0 255.255.254.0 10.112.11.253
+ip route 10.32.2.0 255.255.255.0 10.112.10.251
+ip route 10.32.4.16 255.255.255.248 10.112.10.251
+ip route 10.32.5.182 255.255.255.255 10.112.10.251
+ip route 10.33.5.0 255.255.255.0 10.112.10.251
+ip route 10.33.57.34 255.255.255.255 10.112.10.251
+ip route 10.33.57.35 255.255.255.255 10.112.10.251
+ip route 10.33.57.36 255.255.255.255 10.112.10.251
+ip route 10.34.34.0 255.255.255.0 10.112.10.251
+ip route 10.36.8.8 255.255.255.255 10.112.10.251
+ip route 10.36.8.19 255.255.255.255 10.112.10.251
+ip route 10.36.10.0 255.255.255.240 10.112.10.251
+ip route 10.37.0.0 255.255.255.0 10.112.10.251
+ip route 10.46.15.194 255.255.255.255 10.112.10.251
+ip route 10.46.15.226 255.255.255.255 10.112.10.251
+ip route 10.51.160.0 255.255.248.0 10.112.11.253
+ip route 10.51.164.50 255.255.255.255 10.112.11.253
+ip route 10.51.172.0 255.255.252.0 10.112.10.250 name TunelL2L-RJaneiro
+ip route 10.51.192.0 255.255.224.0 10.112.11.253
+ip route 10.60.4.0 255.255.255.0 10.112.10.251
+ip route 10.60.16.0 255.255.255.0 10.112.10.251
+ip route 10.60.33.0 255.255.255.0 10.112.10.251
+ip route 10.60.39.0 255.255.255.0 10.112.10.251
+ip route 10.61.100.0 255.255.255.0 10.112.10.251
+ip route 10.61.120.0 255.255.255.0 10.112.10.251
+ip route 10.67.0.0 255.255.0.0 10.112.10.251
+ip route 10.80.20.0 255.255.255.0 10.112.10.251
+ip route 10.80.60.0 255.255.255.0 10.112.10.251
+ip route 10.80.160.0 255.255.255.0 10.112.10.251
+ip route 10.80.208.0 255.255.255.0 10.112.10.251
+ip route 10.100.16.0 255.255.255.0 10.112.10.250
+ip route 10.100.32.0 255.255.255.0 10.112.10.250
+ip route 10.103.1.253 255.255.255.255 10.112.10.245
+ip route 10.104.50.0 255.255.255.0 10.112.10.251
+ip route 10.106.0.0 255.255.0.0 10.112.10.251
+ip route 10.106.36.0 255.255.255.0 10.112.11.253
+ip route 10.107.0.0 255.255.0.0 10.112.10.251
+ip route 10.112.23.0 255.255.255.0 10.112.12.45
+ip route 10.112.25.0 255.255.255.0 10.112.12.45
+ip route 10.112.26.0 255.255.255.0 10.112.12.45
+ip route 10.112.27.0 255.255.255.0 10.112.12.45
+ip route 10.112.28.0 255.255.255.0 10.112.12.45
+ip route 10.112.29.0 255.255.255.0 10.112.12.45
+ip route 10.112.31.0 255.255.255.0 10.112.12.45
+ip route 10.112.36.0 255.255.255.0 10.112.12.45
+ip route 10.112.49.0 255.255.255.0 10.112.12.45
+ip route 10.112.50.0 255.255.255.0 10.112.12.45
+ip route 10.112.51.0 255.255.255.0 10.112.12.45
+ip route 10.112.68.0 255.255.255.0 10.112.12.45
+ip route 10.112.69.0 255.255.255.0 10.112.12.45
+ip route 10.112.98.0 255.255.255.0 10.112.12.45
+ip route 10.112.99.0 255.255.255.0 10.112.12.45
+ip route 10.112.144.0 255.255.255.0 10.112.10.251
+ip route 10.112.178.0 255.255.255.0 10.112.12.45
+ip route 10.112.180.0 255.255.255.0 10.112.12.45
+ip route 10.112.182.0 255.255.255.0 10.112.12.45
+ip route 10.112.186.0 255.255.255.0 10.112.12.45
+ip route 10.112.187.0 255.255.255.0 10.112.12.45
+ip route 10.112.188.0 255.255.255.0 10.112.12.45
+ip route 10.112.189.0 255.255.255.0 10.112.12.45
+ip route 10.112.190.0 255.255.255.0 10.112.12.45
+ip route 10.112.191.0 255.255.255.0 10.112.12.45
+ip route 10.112.208.0 255.255.252.0 10.112.10.245
+ip route 10.112.223.0 255.255.255.0 10.112.12.45
+ip route 10.112.227.0 255.255.255.0 10.112.12.45
+ip route 10.113.0.0 255.255.0.0 10.112.12.45
+ip route 10.114.27.128 255.255.255.224 10.112.11.253
+ip route 10.114.59.136 255.255.255.255 10.112.11.253
+ip route 10.114.59.169 255.255.255.255 10.112.11.253
+ip route 10.114.59.170 255.255.255.255 10.112.11.253
+ip route 10.114.59.171 255.255.255.255 10.112.11.253
+ip route 10.114.59.172 255.255.255.255 10.112.11.253
+ip route 10.114.59.173 255.255.255.255 10.112.11.253
+ip route 10.114.113.224 255.255.255.224 10.112.11.253
+ip route 10.115.0.0 255.255.0.0 10.112.10.251
+ip route 10.120.0.0 255.255.255.0 10.112.10.250
+ip route 10.121.0.0 255.255.255.0 10.112.10.250
+ip route 10.124.90.0 255.255.255.0 10.112.10.251
+ip route 10.124.90.70 255.255.255.255 10.112.10.251
+ip route 10.124.90.71 255.255.255.255 10.112.10.251
+ip route 10.124.97.10 255.255.255.255 10.112.10.251
+ip route 10.124.97.96 255.255.255.240 10.112.10.251
+ip route 10.128.0.0 255.255.0.0 10.112.10.250
+ip route 10.128.0.0 255.255.255.0 10.112.11.253
+ip route 10.128.1.0 255.255.255.0 10.112.11.253
+ip route 10.128.14.0 255.255.255.0 10.112.10.251
+ip route 10.128.16.0 255.255.255.0 10.112.10.251
+ip route 10.128.17.2 255.255.255.255 10.112.10.251
+ip route 10.128.52.0 255.255.255.0 10.112.10.251
+ip route 10.128.66.0 255.255.255.0 10.112.10.251
+ip route 10.128.102.0 255.255.255.0 10.112.10.251
+ip route 10.129.0.0 255.255.0.0 10.112.10.250
+ip route 10.130.90.0 255.255.255.0 10.112.10.251
+ip route 10.130.90.70 255.255.255.255 10.112.10.251
+ip route 10.130.90.71 255.255.255.255 10.112.10.251
+ip route 10.130.102.0 255.255.255.0 10.112.10.251
+ip route 10.130.103.0 255.255.255.0 10.112.10.251
+ip route 10.135.1.147 255.255.255.255 10.112.10.250
+ip route 10.136.2.0 255.255.255.0 10.112.10.251
+ip route 10.136.128.0 255.255.255.0 10.112.10.251
+ip route 10.168.1.0 255.255.255.0 10.112.10.251
+ip route 10.168.6.6 255.255.255.255 10.112.10.251
+ip route 10.168.6.7 255.255.255.255 10.112.10.251
+ip route 10.170.19.0 255.255.255.240 10.112.10.251
+ip route 10.170.22.80 255.255.255.240 10.112.10.251
+ip route 10.171.0.0 255.255.0.0 10.112.10.251
+ip route 10.173.144.131 255.255.255.255 10.112.11.253
+ip route 10.204.0.0 255.255.0.0 10.112.12.43 name AUS_MVNO_temp_RL_Mai2018
+ip route 10.230.1.0 255.255.255.0 10.112.10.250
+ip route 10.240.55.169 255.255.255.255 10.112.10.251
+ip route 10.250.86.0 255.255.255.0 10.112.10.251
+ip route 10.250.189.0 255.255.255.0 10.112.12.44
+ip route 10.254.7.0 255.255.255.0 10.112.10.250
+ip route 10.255.255.0 255.255.255.0 10.112.11.253
+ip route 62.28.173.6 255.255.255.255 10.112.11.253
+ip route 62.28.173.21 255.255.255.255 10.112.11.253
+ip route 62.28.173.72 255.255.255.255 10.112.11.253
+ip route 62.28.173.100 255.255.255.255 10.112.11.253
+ip route 144.64.0.0 255.255.0.0 10.112.11.253
+ip route 172.2.1.0 255.255.255.0 10.112.10.251
+ip route 172.2.10.34 255.255.255.255 10.112.10.251
+ip route 172.2.10.35 255.255.255.255 10.112.10.251
+ip route 172.2.10.36 255.255.255.255 10.112.10.251
+ip route 172.16.1.124 255.255.255.255 10.112.10.251
+ip route 172.16.1.157 255.255.255.255 10.112.10.251
+ip route 172.16.2.0 255.255.255.0 10.112.10.245
+ip route 172.16.2.64 255.255.255.192 10.112.10.251
+ip route 172.16.3.0 255.255.255.0 10.112.10.251
+ip route 172.16.17.0 255.255.255.0 10.112.12.43
+ip route 172.16.20.0 255.255.255.0 10.112.10.251
+ip route 172.16.21.64 255.255.255.240 10.112.10.251
+ip route 172.16.26.82 255.255.255.255 10.112.10.250
+ip route 172.16.29.0 255.255.255.0 10.112.10.251
+ip route 172.16.31.0 255.255.255.0 10.112.12.25
+ip route 172.16.32.0 255.255.255.0 10.112.12.25
+ip route 172.16.40.0 255.255.255.0 10.112.10.251
+ip route 172.16.42.0 255.255.255.0 10.112.10.251
+ip route 172.16.59.0 255.255.255.0 10.112.12.43
+ip route 172.16.60.0 255.255.255.0 10.112.10.251
+ip route 172.16.62.0 255.255.255.0 10.112.12.50
+ip route 172.16.70.0 255.255.255.0 10.112.10.251
+ip route 172.16.73.0 255.255.255.0 10.112.10.251
+ip route 172.16.75.0 255.255.255.0 10.112.10.251
+ip route 172.16.78.0 255.255.255.0 10.112.12.43
+ip route 172.16.81.0 255.255.255.0 10.112.10.251
+ip route 172.16.101.0 255.255.255.0 10.112.10.251
+ip route 172.16.112.0 255.255.255.0 10.112.10.251
+ip route 172.16.116.0 255.255.255.0 10.112.12.43
+ip route 172.16.121.11 255.255.255.255 10.112.10.250
+ip route 172.16.121.37 255.255.255.255 10.112.10.250
+ip route 172.16.121.41 255.255.255.255 10.112.10.250
+ip route 172.16.121.223 255.255.255.255 10.112.10.250
+ip route 172.16.129.0 255.255.255.0 10.112.10.251
+ip route 172.16.133.0 255.255.255.128 10.112.10.251
+ip route 172.16.137.0 255.255.255.128 10.112.10.251
+ip route 172.16.141.16 255.255.255.240 10.112.10.251
+ip route 172.16.181.0 255.255.255.0 10.112.12.43
+ip route 172.16.238.0 255.255.255.0 10.112.12.43
+ip route 172.17.2.0 255.255.255.0 10.112.10.251
+ip route 172.17.50.0 255.255.255.0 10.112.10.251
+ip route 172.17.112.2 255.255.255.255 10.112.10.250
+ip route 172.17.112.7 255.255.255.255 10.112.10.250
+ip route 172.18.0.0 255.255.0.0 10.112.10.250
+ip route 172.18.8.0 255.255.255.0 10.112.10.245
+ip route 172.18.41.0 255.255.255.0 10.112.10.245
+ip route 172.18.42.0 255.255.255.0 10.112.10.245
+ip route 172.18.43.0 255.255.255.0 10.112.10.245
+ip route 172.18.44.0 255.255.255.0 10.112.10.245
+ip route 172.18.118.0 255.255.255.0 10.112.10.245
+ip route 172.18.119.0 255.255.255.0 10.112.10.245
+ip route 172.18.134.0 255.255.255.0 10.112.10.251
+ip route 172.18.147.0 255.255.255.0 10.112.10.245
+ip route 172.18.148.0 255.255.255.0 10.112.10.245
+ip route 172.18.149.0 255.255.255.0 10.112.10.245
+ip route 172.18.150.0 255.255.255.0 10.112.10.245
+ip route 172.18.151.0 255.255.255.0 10.112.10.245
+ip route 172.18.152.0 255.255.255.0 10.112.10.245
+ip route 172.18.161.0 255.255.255.0 10.112.10.251
+ip route 172.18.215.0 255.255.255.0 10.112.10.245
+ip route 172.18.216.0 255.255.255.0 10.112.10.245
+ip route 172.18.232.185 255.255.255.255 10.112.10.250
+ip route 172.19.0.0 255.255.0.0 10.112.10.250
+ip route 172.19.208.55 255.255.255.255 10.112.10.245
+ip route 172.19.247.0 255.255.255.0 10.112.10.245
+ip route 172.19.248.0 255.255.254.0 10.112.10.245
+ip route 172.19.250.0 255.255.255.0 10.112.10.245
+ip route 172.19.251.0 255.255.255.0 10.112.10.245
+ip route 172.19.252.0 255.255.255.0 10.112.10.245
+ip route 172.20.0.0 255.255.0.0 10.112.11.253
+ip route 172.20.48.84 255.255.255.255 10.112.10.251
+ip route 172.21.0.0 255.255.0.0 10.112.10.252
+ip route 172.22.0.0 255.255.0.0 10.112.10.250
+ip route 172.23.0.0 255.255.0.0 10.112.10.200
+ip route 172.24.15.0 255.255.255.0 10.112.29.222
+ip route 172.24.172.204 255.255.255.252 10.112.11.253
+ip route 172.25.0.0 255.255.0.0 10.112.11.253
+ip route 172.25.32.0 255.255.255.0 10.112.10.251
+ip route 172.25.34.0 255.255.255.0 10.112.10.251
+ip route 172.25.153.0 255.255.255.0 10.112.12.44
+ip route 172.26.255.0 255.255.255.0 10.112.10.251
+ip route 172.27.0.0 255.255.0.0 10.112.11.253
+ip route 172.27.48.0 255.255.255.0 10.112.10.251
+ip route 172.28.0.0 255.255.0.0 10.112.11.253
+ip route 172.29.0.0 255.255.0.0 10.112.11.253
+ip route 172.29.9.0 255.255.255.0 10.112.10.251
+ip route 172.29.17.0 255.255.255.0 10.112.10.251
+ip route 172.29.18.0 255.255.255.0 10.112.10.251
+ip route 172.30.0.0 255.255.0.0 10.112.11.253
+ip route 172.30.12.0 255.255.255.0 10.112.10.251
+ip route 172.31.0.0 255.255.255.0 10.112.10.251
+ip route 172.31.11.128 255.255.255.128 10.112.12.45
+ip route 172.31.14.0 255.255.255.0 10.112.10.246
+ip route 172.31.25.0 255.255.255.0 10.112.106.14
+ip route 172.31.29.0 255.255.255.0 10.112.106.72
+ip route 172.31.31.0 255.255.255.0 10.112.106.71
+ip route 172.31.32.0 255.255.240.0 10.112.106.205
+ip route 172.31.36.0 255.255.255.0 10.112.105.76
+ip route 172.31.37.0 255.255.255.0 10.112.106.107
+ip route 172.31.39.0 255.255.255.0 10.112.105.77
+ip route 172.31.41.0 255.255.255.0 10.112.10.252
+ip route 172.31.43.4 255.255.255.255 10.112.10.252
+ip route 172.31.45.0 255.255.255.0 10.112.10.252
+ip route 172.31.50.0 255.255.255.0 10.112.105.196
+ip route 172.31.53.0 255.255.255.0 10.112.105.80
+ip route 172.31.254.0 255.255.255.0 10.112.105.76
+ip route 172.40.30.0 255.255.255.0 10.112.106.36
+ip route 172.41.0.0 255.255.0.0 10.112.106.149
+ip route 172.50.0.0 255.255.0.0 10.112.106.230
+ip route 175.175.175.160 255.255.255.224 10.112.106.65
+ip route 180.142.0.0 255.255.0.0 10.112.11.253
+ip route 180.224.0.0 255.255.0.0 10.112.11.253
+ip route 180.234.0.0 255.254.0.0 10.112.11.253
+ip route 180.236.0.0 255.252.0.0 10.112.11.253
+ip route 180.242.0.0 255.255.0.0 10.112.11.253
+ip route 180.244.0.0 255.255.0.0 10.112.11.253
+ip route 180.246.0.0 255.255.0.0 10.112.11.253
+ip route 180.254.0.0 255.255.0.0 10.112.11.253
+ip route 192.168.0.0 255.255.255.0 10.112.10.250
+ip route 192.168.1.0 255.255.255.0 10.112.10.251
+ip route 192.168.2.0 255.255.255.0 10.112.10.251
+ip route 192.168.3.0 255.255.255.0 10.112.10.245
+ip route 192.168.3.202 255.255.255.255 10.112.10.245
+ip route 192.168.5.110 255.255.255.255 10.112.10.251
+ip route 192.168.5.127 255.255.255.255 10.112.10.251
+ip route 192.168.5.128 255.255.255.255 10.112.10.251
+ip route 192.168.6.0 255.255.255.0 10.112.10.251
+ip route 192.168.8.0 255.255.255.0 10.112.10.251
+ip route 192.168.10.100 255.255.255.255 10.112.10.251
+ip route 192.168.10.110 255.255.255.255 10.112.10.251
+ip route 192.168.10.111 255.255.255.255 10.112.10.251
+ip route 192.168.10.112 255.255.255.255 10.112.10.251
+ip route 192.168.12.0 255.255.254.0 10.112.10.251
+ip route 192.168.15.0 255.255.255.0 10.112.12.43
+ip route 192.168.17.3 255.255.255.255 10.112.10.251
+ip route 192.168.20.31 255.255.255.255 10.112.10.251
+ip route 192.168.20.127 255.255.255.255 10.112.10.251
+ip route 192.168.24.0 255.255.255.0 10.112.10.251
+ip route 192.168.27.0 255.255.255.0 10.112.10.251
+ip route 192.168.28.0 255.255.255.0 10.112.10.251
+ip route 192.168.32.165 255.255.255.255 10.112.10.251
+ip route 192.168.34.0 255.255.255.0 10.112.10.251
+ip route 192.168.35.0 255.255.255.0 10.112.10.251
+ip route 192.168.36.0 255.255.255.0 10.112.10.251
+ip route 192.168.37.0 255.255.255.0 10.112.10.251
+ip route 192.168.50.0 255.255.255.0 10.112.104.252
+ip route 192.168.69.0 255.255.255.0 10.112.10.252
+ip route 192.168.78.0 255.255.255.0 10.112.25.112
+ip route 192.168.79.0 255.255.255.0 10.112.25.112
+ip route 192.168.80.0 255.255.255.0 10.112.10.251
+ip route 192.168.87.0 255.255.255.0 10.112.11.253
+ip route 192.168.89.95 255.255.255.255 10.112.10.246
+ip route 192.168.100.120 255.255.255.255 10.112.10.251
+ip route 192.168.100.121 255.255.255.255 10.112.10.251
+ip route 192.168.101.0 255.255.255.0 10.112.10.252
+ip route 192.168.102.0 255.255.255.0 10.112.10.245
+ip route 192.168.103.0 255.255.255.0 10.112.10.245
+ip route 192.168.110.0 255.255.255.0 10.112.11.253
+ip route 192.168.111.0 255.255.255.0 10.112.11.253
+ip route 192.168.114.0 255.255.255.0 10.112.11.253
+ip route 192.168.129.0 255.255.255.224 10.112.11.253
+ip route 192.168.160.0 255.255.255.0 10.112.11.253
+ip route 192.168.164.252 255.255.255.252 10.112.11.253
+ip route 192.168.188.10 255.255.255.255 10.112.10.251
+ip route 192.168.188.23 255.255.255.255 10.112.10.251
+ip route 192.168.189.1 255.255.255.255 10.112.10.251
+ip route 192.168.199.0 255.255.255.224 10.112.36.210
+ip route 192.168.200.2 255.255.255.255 10.112.10.251
+ip route 192.168.200.128 255.255.255.255 10.112.10.251
+ip route 192.168.202.0 255.255.255.0 10.112.10.250
+ip route 192.168.220.0 255.255.255.0 10.112.10.250
+ip route 192.168.230.0 255.255.255.0 10.112.10.251
+ip route 192.168.231.0 255.255.255.0 10.112.10.251
+ip route 192.168.250.0 255.255.255.0 10.112.10.251
+ip route 192.168.253.0 255.255.255.0 10.112.10.251
+ip route 193.126.233.66 255.255.255.255 10.112.10.250
+ip route 193.126.233.68 255.255.255.255 10.112.10.250
+ip route 194.65.37.122 255.255.255.255 10.112.11.253
+ip route 194.65.37.123 255.255.255.255 10.112.11.253
+ip route 194.65.113.193 255.255.255.255 10.112.11.253
+ip route 194.65.113.199 255.255.255.255 10.112.11.253
+ip route 194.65.113.200 255.255.255.255 10.112.11.253
+ip route 194.65.141.154 255.255.255.255 10.112.11.253
+ip route 194.65.152.177 255.255.255.255 10.112.10.251
+ip route 196.22.97.0 255.255.255.0 10.112.10.251
+ip route 213.13.25.224 255.255.255.224 10.112.11.253
+ip route 213.13.26.147 255.255.255.255 10.112.11.253
+ip route 213.13.27.100 255.255.255.252 10.112.11.253
+ip route 213.13.27.103 255.255.255.255 10.112.11.253
+ip route 213.13.27.104 255.255.255.248 10.112.11.253
+ip route 213.13.27.108 255.255.255.255 10.112.11.253
+ip route 213.13.145.106 255.255.255.255 10.112.11.253
+ip route 213.13.145.240 255.255.255.255 10.112.11.253
+ip route 213.13.145.254 255.255.255.255 10.112.11.253
+ip route 213.13.150.184 255.255.255.255 10.112.11.253
+!
+ip access-list extended CISCO-CAE
+ permit ip 172.24.15.0 0.0.0.255 any
+ip access-list extended SONATA
+ permit ip 172.31.6.0 0.0.0.255 10.10.1.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.30.0.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.31.0.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.31.1.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.100.16.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.100.32.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.100.64.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.200.2.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 192.168.89.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.112.200.0 0.0.3.255
+ permit ip 172.31.6.0 0.0.0.255 10.112.208.0 0.0.3.255
+ permit ip 172.31.6.0 0.0.0.255 10.112.24.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.112.72.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 10.230.1.0 0.0.0.255
+ permit ip 172.31.6.0 0.0.0.255 host 10.112.12.252
+ permit ip 172.31.6.0 0.0.0.255 host 8.8.8.8
+ deny   ip 172.31.6.0 0.0.0.255 10.112.29.0 0.0.0.255
+ deny   ip 172.31.6.0 0.0.0.255 10.112.0.0 0.0.255.255
+ permit ip 172.31.6.0 0.0.0.255 any
+ip access-list extended VSL-BFD
+ permit udp any any eq 3784
+ip access-list extended VSL-DHCP-CLIENT-TO-SERVER
+ permit udp any eq bootpc any eq bootps
+ip access-list extended VSL-DHCP-SERVER-TO-CLIENT
+ permit udp any eq bootps any eq bootpc
+ip access-list extended VSL-DHCP-SERVER-TO-SERVER
+ permit udp any eq bootps any eq bootps
+ip access-list extended VSL-IPV4-ROUTING
+ permit ip any 224.0.0.0 0.0.0.255
+!
+ip radius source-interface Vlan2 
+logging trap debugging
+logging facility local5
+logging host 10.112.15.30
+logging host 10.162.125.148
+logging host 10.163.121.70
+logging host 10.166.110.4
+logging host 10.112.15.28
+access-list 20 permit 239.0.0.250
+access-list 90 permit 10.112.67.151 log
+!
+route-map CISCO-CAE permit 10
+ match ip address CISCO-CAE
+!
+snmp-server engineID local 000000090200000142B26580
+snmp-server group groupplat v3 auth read V3Read write V3Write notify All 
+snmp-server view All iso included
+snmp-server view V3Read iso included
+snmp-server view V3Write iso included
+snmp-server community gest4ptin RO 10
+snmp-server community nac!snmp2010 RW 10
+snmp-server community public RO
+snmp-server trap-source Vlan2
+snmp-server chassis-id 0x13
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps tty
+snmp-server enable traps rf
+snmp-server enable traps fru-ctrl
+snmp-server enable traps entity
+snmp-server enable traps flash insertion removal
+snmp-server enable traps vtp
+snmp-server enable traps vlancreate
+snmp-server enable traps vlandelete
+snmp-server enable traps envmon fan shutdown supply temperature status
+snmp-server enable traps port-security
+snmp-server enable traps ipsla
+snmp-server enable traps config-copy
+snmp-server enable traps config
+snmp-server enable traps ipmulticast
+snmp-server enable traps pim neighbor-change rp-mapping-change invalid-pim-message
+snmp-server enable traps bridge newroot topologychange
+snmp-server enable traps stpx inconsistency root-inconsistency loop-inconsistency
+snmp-server enable traps syslog
+snmp-server enable traps vlan-membership
+snmp-server host 10.112.12.54 version 2c cam_v2c 
+snmp-server host 10.162.205.27 public  snmp
+snmp-server host 10.163.121.70 public  snmp
+!
+radius-server timeout 1
+!
+radius server RadiusPTINS
+ address ipv4 10.112.15.30 auth-port 1812 acct-port 1813
+ key 7 13361F131909001A3C200B3A26211C35170708434A
+!
+radius server PTNET1
+ address ipv4 10.162.125.148 auth-port 1812 acct-port 1813
+ key 7 104F1F0B161211190910250A0509
+!
+radius server PTNET2
+ address ipv4 10.166.110.4 auth-port 1812 acct-port 1813
+ key 7 12181305010E0F162F3F2B091214
+!
+!
+!
+ipv6 access-list VSL-IPV6-ROUTING
+ permit ipv6 any FF02::/124
+!
+control-plane
+ service-policy input system-cpp-policy
+!
+privilege exec level 6 traceroute
+privilege exec level 6 ping
+privilege exec level 6 show configuration
+privilege exec level 6 show interfaces
+privilege exec level 6 show
+banner login 
+******************************************************************************
+     AVR03SWG001: O DIREITO DE ACESSO A ESTE SISTEMA E' RESERVADO !!              
+******************************************************************************
+*    Os Sistemas Internos da PT Comunicacoes destinam-se a ser utilizados    *
+*    exclusivamente para fins de negocios desta empresa ou para qualquer     *
+*             tarefa previamente autorizada pela administracao.              *
+*                                                                            *
+*      Qualquer tentativa ilegal de acesso, mesmo quando rejeitada, esta'    *
+*                 sujeita a procedimento civil e criminal.                   *
+*    Se nao esta' autorizado pela PT Comunicacoes a aceder a este sistema,   *
+*                     por favor DESLIGUE imediatamente.                      *
+******************************************************************************
+Este sistema esta' sujeito a auditorias efectuadas a qualquer momento.    
+******************************************************************************
+
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ transport input all
+!
+!
+monitor session 1 source interface Gi1/7/1 , Gi1/7/11 - 12 , Gi1/7/16 , Gi1/7/18
+monitor session 1 destination interface Te1/1/2 encapsulation dot1q
+monitor session 1 filter packet-type good rx
+!
+module provision switch 1
+ chassis-type 68 base-mac 7081.0554.BC00
+ slot 1 slot-type 387 base-mac 4055.39E0.9AEC
+ slot 3 slot-type 390 base-mac 7081.0554.BC00
+ slot 7 slot-type 399 base-mac C067.AF3D.6768
+ !
+module provision switch 2
+ chassis-type 68 base-mac 7C69.F6E3.5340
+ slot 1 slot-type 387 base-mac C08C.60FC.A534
+ slot 3 slot-type 390 base-mac 7C69.F6E3.5340
+ slot 7 slot-type 399 base-mac C067.AF20.F520
+ 
+!
+
+ ntp server 10.167.50.10
+ ntp server 10.167.50.11
+ ntp server 10.162.125.148
+end

@@ -1,0 +1,1349 @@
+
+!
+! Last configuration change at 14:38:16 GMT Thu Feb 4 2021 by lcaseiro
+! NVRAM config last updated at 14:38:16 GMT Thu Feb 4 2021 by lcaseiro
+! NVRAM config last updated at 14:38:16 GMT Thu Feb 4 2021 by lcaseiro
+version 15.1
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+service udp-small-servers
+service tcp-small-servers
+!
+hostname AVR03RTR001
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging buffered 100000
+enable secret 5 $1$kCQi$cdtS.Ci.T3.JjVdZxrc3g0
+!
+aaa new-model
+!
+!
+aaa group server radius network-group
+ server name PTNET1
+ server name PTNET2
+!
+aaa authentication login default group network-group local
+aaa authentication enable default enable
+aaa authorization exec default group network-group local 
+aaa accounting exec default start-stop group network-group
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone GMT 0 0
+clock summer-time UTC recurring last Sun Mar 1:00 last Sun Oct 1:00
+!
+no ipv6 cef
+ip source-route
+ip cef
+!
+!
+!
+ip vrf AVAC
+ rd 900:1
+!
+ip vrf TELEPRESENCA
+ rd 610:1
+!
+!
+!
+no ip domain lookup
+ip domain name ptin.corppt.com
+ip name-server 10.112.15.66
+ip wccp 61
+ip wccp 62
+no ip igmp snooping
+multilink bundle-name authenticated
+!
+!
+crypto pki token default removal timeout 0
+!
+crypto pki trustpoint TP-self-signed-3077281807
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3077281807
+ revocation-check none
+ rsakeypair TP-self-signed-3077281807
+!
+!
+crypto pki certificate chain TP-self-signed-3077281807
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33303737 32383138 3037301E 170D3134 30353233 31343534 
+  34395A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 30373732 
+  38313830 3730819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100C666 CEFEC751 AC5C82A6 395C9748 F95449A8 48938784 A44128EE C6E4B782 
+  AC285C5E 025878C0 7F1DE450 4B9A607C 18F621B7 39A07BE1 431D3578 64FAC2D6 
+  3EDB8BB9 6AB2704F 182EB88B 7EEDDC89 BD07257A 91B26D83 B2F2C094 7CCE057D 
+  F2B6A3B7 328CF6EC C5FF7C0D FEF0BA1D C0994C37 9FC83671 9C93A75F E3F55124 
+  277F0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 14B4C6C3 1E35CD6C CCB3A1FE 4D77F0EE D4EDD218 82301D06 
+  03551D0E 04160414 B4C6C31E 35CD6CCC B3A1FE4D 77F0EED4 EDD21882 300D0609 
+  2A864886 F70D0101 05050003 818100B8 692FC7AA 2F8B564C A27A32EF 061B2402 
+  4866A503 46EFD62F 24C804F5 52858255 0930D578 0B643512 88BA77EB CE68D412 
+  7385AAB9 4596E5CF C7C40486 589A2FEF EBB724DA 47116998 B0BF5086 15A4B31A 
+  2D6A5347 505BCA33 34ED0C41 73B71BA2 A81B0EB6 F2E18FCB 0C161D07 14333CD6 
+  0F8B6F1D 0041C61B 11DB7FA0 9ECDC9
+  	quit
+license udi pid C3900-SPE150/K9 sn FOC15420A9W
+!
+!
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+  hidekeys
+vtp domain ptin
+vtp mode transparent
+username CCP_admin privilege 15 secret 5 $1$HDhU$j7i.Ww3mINl2qhGXF6fTL1
+username doprdd2 secret 5 $1$dwmt$cd8E5.LT.5ckM6iC6VgR21
+!
+!
+vlan 2
+ name MPLS-PLL-Dados
+!
+vlan 3
+ name MPLS-PLL-Voz
+!
+vlan 6
+ name OIA
+!
+vlan 8
+ name VILLAFLOR
+!
+vlan 10
+ name IPv6
+!
+vlan 34 
+!
+vlan 40
+ name MPLS-PLP-Dados
+!
+vlan 50
+ name MPLS-PLP-Voz
+!
+vlan 97
+ name MAI
+!
+vlan 100
+ name GPON
+!
+vlan 123,200 
+!
+vlan 222
+ name PTIN-INB
+!
+vlan 424
+ name INTERNET
+!
+vlan 600
+ name PTNET
+!
+vlan 601
+ name PTNET2
+!
+vlan 610
+ name TELEPRESENCA
+!
+vlan 611
+ name TELEPRESENCA2
+!
+vlan 612
+ name TELEPRESENCA-PTIN
+!
+vlan 613
+ name TELEPRESENCA-PTIN-OM
+!
+vlan 636
+ name INB
+!
+vlan 637
+ name INB-Novo
+!
+vlan 800
+ name WAAS
+!
+vlan 900
+ name AVAC-REST
+!
+vlan 952
+ name AIB
+!
+ip tftp source-interface GigabitEthernet0/2
+!
+track 1 interface GigabitEthernet0/1 line-protocol
+!
+track 2 interface GigabitEthernet0/1 line-protocol
+!
+class-map match-any management
+ match access-group name management
+class-map match-any silver
+ match access-group name silver
+class-map match-any voice
+ match protocol rtp
+ match access-group name Voip-Rtcp
+ match ip dscp ef 
+ match ip dscp af41 
+class-map match-any premium
+ match access-group name premium
+!
+!
+policy-map SHAPE-4MBPS
+ class class-default
+  shape average 4000000
+policy-map SHAPE-2MBPS
+ class class-default
+  shape average 2000000
+policy-map SHAPE-100MBPS
+ class class-default
+  shape average 100000000
+policy-map qos-rin-remotos
+ class voice
+  priority percent 25
+  set precedence 5
+ class management
+  bandwidth percent 5
+  set precedence 2
+ class premium
+  bandwidth percent 20
+  set precedence 4
+ class silver
+  bandwidth percent 20
+  set precedence 1
+ class class-default
+  set precedence 0
+  fair-queue
+policy-map SHAPE-10MBPS
+ class class-default
+  shape average 10000000
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.112.1.1 255.255.255.255
+!
+interface Tunnel3
+ description acessos PRT01SWA73-A (PLP) - VPNs Extranet PTIS
+ ip address 10.156.246.86 255.255.255.252
+ keepalive 10 3
+ tunnel source 10.112.1.1
+ tunnel destination 10.156.252.41
+!
+interface Tunnel4
+ description acessos OBR01SWD01(Oia) - VPNs Extranet PTIS
+ ip address 10.156.241.58 255.255.255.252
+ keepalive 10 3
+ tunnel source 10.112.1.1
+ tunnel destination 10.156.252.47
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ description Rede Interna PTIN
+ no ip address
+ no ip proxy-arp
+ ip flow ingress
+ ip nat inside
+ no ip virtual-reassembly in
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no keepalive
+!
+interface GigabitEthernet0/0.11
+ encapsulation dot1Q 11
+ ip address 10.112.11.252 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ standby 1 ip 10.112.11.253
+ standby 1 priority 151
+ standby 1 preempt
+ standby 1 track 2 decrement 10
+!
+interface GigabitEthernet0/0.612
+ encapsulation dot1Q 612
+ ip vrf forwarding TELEPRESENCA
+ ip address 10.156.20.69 255.255.255.248
+ standby 2 ip 10.156.20.70
+ standby 2 priority 151
+ standby 2 preempt
+ standby 2 track 2 decrement 10
+!
+interface GigabitEthernet0/0.613
+ encapsulation dot1Q 613
+ ip vrf forwarding TELEPRESENCA
+ ip address 10.156.20.211 255.255.255.248
+ standby 3 ip 10.156.20.214
+ standby 3 priority 151
+ standby 3 preempt
+ standby 3 track 2 decrement 10
+!
+interface GigabitEthernet0/0.6134
+!
+interface GigabitEthernet0/1
+ description Acesso BBIP (SR-AV1#2/2/7) 1Gbps (IXS.09.52109 - 1001386081) - PTNET (VLAN600), TELEPRESENCA (VLAN610), INB-Novo (VLAN637)
+ no ip address
+ no ip proxy-arp
+ load-interval 30
+ shutdown
+ duplex auto
+ speed auto
+ no routing dynamic
+!
+interface GigabitEthernet0/1.11
+!
+interface GigabitEthernet0/1.600
+ description Acesso ptNet (er-av1#ge-0/0/0.62 - VPN rin) 100Mbps (ec01962 - 1009602360)
+ encapsulation dot1Q 600
+!
+interface GigabitEthernet0/1.610
+ description Acesso Telepresenca (EC-AV1#Bundle-Ether181.20500445 - VRF telepresence) 30Mbps (IXS.15.57661 - 1009636891)
+ encapsulation dot1Q 610
+ ip vrf forwarding TELEPRESENCA
+!
+interface GigabitEthernet0/1.637
+ description Acesso ALB (EC-AV1#Bundle-Ether181.20500258 - VRF ptinoi) 5Mbps (IXS.14.65426 - 1009626335)
+ encapsulation dot1Q 637
+!
+interface GigabitEthernet0/2
+ description Acesso BBIP (SR-AV1#2/2/7) 1Gbps (IXS.09.52109 - 1001386081) - PTNET (VLAN600), TELEPRESENCA (VLAN610), INB-Novo (VLAN637)
+ no ip address
+ no ip proxy-arp
+ load-interval 30
+ duplex auto
+ speed auto
+ no routing dynamic
+!
+interface GigabitEthernet0/2.600
+ description Acesso ptNet (er-av1#ge-0/0/0.62 - VPN rin) 100Mbps (ec01962 - 1009602360)
+ encapsulation dot1Q 600
+ ip address 10.156.242.150 255.255.255.252
+!
+interface GigabitEthernet0/2.610
+ description Acesso Telepresenca (EC-AV1#Bundle-Ether181.20500445 - VRF telepresence) 30Mbps (IXS.15.57661 - 1009636891)
+ encapsulation dot1Q 610
+ ip vrf forwarding TELEPRESENCA
+ ip address 10.156.20.150 255.255.255.252
+!
+interface GigabitEthernet0/2.637
+ description Acesso ALB (EC-AV1#Bundle-Ether181.20500258 - VRF ptinoi) 5Mbps (IXS.14.65426 - 1009626335)
+ encapsulation dot1Q 637
+ ip address 10.156.247.182 255.255.255.252
+ ip access-group Brasil-circuito in
+!
+interface GigabitEthernet0/1/0
+ description ligacao p/ swg001 - apenas olt
+ switchport trunk allowed vlan 1,952,1002-1005
+ switchport mode trunk
+ no ip address
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/1/2
+ description Ligacao AIB GECA 1001513885
+ switchport trunk allowed vlan 1,952,1002-1005
+ switchport mode trunk
+ no ip address
+!
+interface GigabitEthernet0/1/3
+ description LIGACAO AO ROUTER INTERNET VLAN 424
+ switchport mode trunk
+ no ip address
+!
+interface GigabitEthernet0/1/4
+ description MPLS 1Gbps (NC:1001386081) - PTNET (VLAN600), TELEPRESENCA (VLAN610), INB (VLAN636), INB-Novo (VLAN637), MAI (VLAN97), IPv6 (VLAN10)
+ switchport trunk allowed vlan 1,10,97,100,600,610,636,637,1002-1005
+ switchport mode trunk
+ no ip address
+ load-interval 30
+ shutdown
+ duplex full
+ speed 1000
+!
+interface GigabitEthernet0/1/5
+ description RT-IPv6 (VLAN10) (10Mbps)
+ switchport access vlan 10
+ no ip address
+ shutdown
+ duplex full
+!
+interface GigabitEthernet0/1/6
+ description MPLS 1Gbps (NC:1001439791) - PTNET2(VLAN601), TELEPRESENCA2 (VLAN611)
+ switchport trunk allowed vlan 1,601,611,1002-1005
+ switchport mode trunk
+ no ip address
+ shutdown
+ duplex full
+ speed 1000
+!
+interface GigabitEthernet0/1/7
+ description MIrror
+ no ip address
+!
+interface GigabitEthernet0/3/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/1
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/2
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/3
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/4
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/5
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/6
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/3/7
+ no ip address
+ shutdown
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan2
+ description PLL-DADOS 10Mbps (NC:1009201347) (ETH00960) (ETL00620)
+ ip address 172.31.16.1 255.255.255.252
+!
+interface Vlan3
+ description PLL-MULTIMEDIA 2Mbps (NC:1009201348) (ETH00960) (ETL00621)
+ ip address 172.31.17.1 255.255.255.252
+!
+interface Vlan6
+ description OIA-DADOS 10Mbps (NC:1009...) (ETH03340) (ETL01716)
+ ip address 172.31.16.9 255.255.255.252
+!
+interface Vlan8
+ description VILLAFLOR 2Mbps (VIP04424)
+ ip address 172.19.115.50 255.255.255.252
+!
+interface Vlan40
+ description PLP-DADOS 10Mbps (NC:1009201349) (ETH00961) (ETL00622)
+ ip address 172.31.16.5 255.255.255.252
+ shutdown
+!
+interface Vlan50
+ description PLP-MULTIMEDIA 2Mbps (NC:1009201350) (ETH00961) (ETL00623)
+ ip address 172.31.17.5 255.255.255.252
+ shutdown
+!
+interface Vlan58
+ no ip address
+!
+interface Vlan97
+ description MAI 4Mbps (NC:1009606020) (EC05795)
+ ip address 192.169.0.18 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+!
+interface Vlan100
+ description Demontracao GPON
+ ip address 172.17.17.2 255.255.255.252
+!
+interface Vlan251
+ no ip address
+!
+interface Vlan601
+ description PTNET2
+ ip address 10.157.241.218 255.255.255.252
+ shutdown
+!
+interface Vlan611
+ description TELEPRESENCA2 30Mbps (NC:IXS.15.57662)
+ ip vrf forwarding TELEPRESENCA
+ ip address 10.156.20.154 255.255.255.252
+ shutdown
+!
+interface Vlan636
+ description Circuito MPLS INB
+ ip address 172.19.212.70 255.255.255.252
+ ip wccp 61 redirect out
+ ip wccp 62 redirect in
+ shutdown
+!
+interface Vlan800
+ description WAAS
+ ip address 192.168.168.254 255.255.255.0
+ ip wccp redirect exclude in
+!
+interface Vlan900
+ description AVAC-REST
+ ip vrf forwarding AVAC
+ ip address 192.168.253.254 255.255.255.0
+!
+router bgp 64627
+ bgp log-neighbor-changes
+ network 10.20.209.0 mask 255.255.255.0
+ network 10.23.96.0 mask 255.255.252.0
+ network 10.23.100.0 mask 255.255.255.0
+ network 10.23.101.0 mask 255.255.255.0
+ network 10.23.102.0 mask 255.255.255.0
+ network 10.23.104.0 mask 255.255.255.0
+ network 10.23.105.0 mask 255.255.255.0
+ network 10.23.106.0 mask 255.255.255.0
+ network 10.23.108.0 mask 255.255.252.0
+ network 10.51.160.0 mask 255.255.240.0
+ network 10.51.192.0 mask 255.255.224.0
+ network 10.51.200.0 mask 255.255.254.0
+ network 10.112.0.0 mask 255.255.0.0
+ network 10.113.0.0 mask 255.255.0.0
+ network 10.156.247.180 mask 255.255.255.252
+ redistribute static route-map static_ptnet
+ neighbor 10.156.242.149 remote-as 15525
+ neighbor 10.156.242.149 soft-reconfiguration inbound
+ neighbor 10.156.242.149 distribute-list 10 in
+ maximum-paths 2
+ !
+ address-family ipv4 vrf TELEPRESENCA
+  network 10.156.20.64 mask 255.255.255.248
+  network 10.156.20.148 mask 255.255.255.252
+  network 10.156.20.152 mask 255.255.255.252
+  network 10.156.20.208 mask 255.255.255.248
+  neighbor 10.156.20.149 remote-as 15525
+  neighbor 10.156.20.149 activate
+  neighbor 10.156.20.149 soft-reconfiguration inbound
+  maximum-paths 2
+ exit-address-family
+!
+ip forward-protocol nd
+!
+ip http server
+ip http authentication local
+ip http secure-server
+ip http timeout-policy idle 60 life 86400 requests 10000
+ip flow-export version 9
+ip flow-export destination 10.112.15.216 9995
+!
+ip nat inside source static 10.112.64.113 10.252.12.33
+ip route 10.0.2.0 255.255.255.0 10.112.11.254
+ip route 10.0.5.0 255.255.255.0 10.112.11.254
+ip route 10.1.70.0 255.255.255.240 10.112.11.254
+ip route 10.1.70.32 255.255.255.224 10.112.11.254
+ip route 10.3.53.11 255.255.255.255 10.156.242.149
+ip route 10.3.96.105 255.255.255.255 10.156.242.149
+ip route 10.8.8.0 255.255.255.0 10.112.11.254
+ip route 10.8.9.0 255.255.255.0 10.112.11.254
+ip route 10.15.0.0 255.255.255.0 10.112.11.254
+ip route 10.16.5.0 255.255.255.0 10.112.11.254
+ip route 10.16.6.0 255.255.255.0 10.112.11.254
+ip route 10.16.9.0 255.255.255.224 10.112.11.254
+ip route 10.16.49.10 255.255.255.255 10.156.242.149
+ip route 10.17.144.144 255.255.255.240 10.156.242.149
+ip route 10.17.199.0 255.255.255.0 10.156.242.149
+ip route 10.20.208.128 255.255.255.128 10.112.11.254
+ip route 10.20.209.0 255.255.255.0 10.112.11.254
+ip route 10.21.0.0 255.255.255.224 10.112.11.254
+ip route 10.21.32.0 255.255.255.0 10.112.11.254
+ip route 10.21.41.0 255.255.255.0 10.112.11.254
+ip route 10.23.96.0 255.255.252.0 10.112.11.254
+ip route 10.23.108.0 255.255.252.0 10.112.11.254
+ip route 10.32.2.0 255.255.255.0 10.112.11.254
+ip route 10.32.4.16 255.255.255.248 10.112.11.254
+ip route 10.33.5.0 255.255.255.0 10.112.11.254
+ip route 10.36.8.8 255.255.255.255 10.112.11.254
+ip route 10.36.8.19 255.255.255.255 10.112.11.254
+ip route 10.36.10.0 255.255.255.240 10.112.11.254
+ip route 10.37.0.0 255.255.255.0 10.112.11.254
+ip route 10.51.160.0 255.255.248.0 10.156.247.181
+ip route 10.51.172.0 255.255.252.0 10.112.11.254
+ip route 10.51.192.0 255.255.224.0 10.156.247.181 name Brasil_vpn
+ip route 10.85.13.192 255.255.255.192 10.156.242.149
+ip route 10.85.14.128 255.255.255.128 10.156.242.149
+ip route 10.107.150.0 255.255.255.0 10.112.11.254
+ip route 10.112.0.0 255.255.0.0 10.112.11.254
+ip route 10.113.0.0 255.255.0.0 10.112.11.254
+ip route 10.114.27.128 255.255.255.224 10.156.242.149
+ip route 10.114.59.136 255.255.255.255 10.156.242.149
+ip route 10.114.113.224 255.255.255.224 10.156.242.149
+ip route 10.115.0.0 255.255.0.0 10.112.11.254
+ip route 10.124.90.0 255.255.255.0 10.112.11.254
+ip route 10.128.0.0 255.255.0.0 10.112.11.254
+ip route 10.128.0.0 255.255.255.0 10.156.242.149
+ip route 10.128.1.0 255.255.255.0 10.156.242.149
+ip route 10.130.90.0 255.255.255.0 10.112.11.254
+ip route 10.130.102.0 255.255.255.0 10.112.11.254
+ip route 10.130.103.0 255.255.255.0 10.112.11.254
+ip route 10.162.216.3 255.255.255.255 10.156.242.149
+ip route 10.170.19.0 255.255.255.240 10.112.11.254
+ip route 10.170.22.80 255.255.255.240 10.112.11.254
+ip route 10.171.0.0 255.255.0.0 10.112.11.254
+ip route 10.173.144.131 255.255.255.255 10.156.242.149
+ip route 10.212.35.195 255.255.255.255 10.156.242.149
+ip route 10.250.240.32 255.255.255.224 10.112.11.254
+ip route 10.250.240.64 255.255.255.224 10.112.11.254
+ip route 10.250.240.96 255.255.255.224 10.112.11.254
+ip route 24.157.9.224 255.255.255.224 10.112.11.254
+ip route 24.157.10.0 255.255.255.224 10.112.11.254
+ip route 24.157.14.0 255.255.255.128 10.112.11.254
+ip route 41.210.223.126 255.255.255.255 10.112.11.254
+ip route 62.28.173.6 255.255.255.255 10.156.242.149
+ip route 62.28.173.21 255.255.255.255 10.156.242.149
+ip route 62.28.173.72 255.255.255.255 10.156.242.149
+ip route 62.28.173.100 255.255.255.255 10.156.242.149
+ip route 62.28.225.94 255.255.255.255 10.112.11.254
+ip route 89.167.129.32 255.255.255.255 10.156.242.149
+ip route 103.211.109.143 255.255.255.255 10.112.11.254
+ip route 172.2.1.0 255.255.255.0 10.112.11.254
+ip route 172.2.10.34 255.255.255.255 10.112.11.254
+ip route 172.2.10.35 255.255.255.255 10.112.11.254
+ip route 172.2.10.36 255.255.255.255 10.112.11.254
+ip route 172.16.2.0 255.255.255.0 10.112.11.254
+ip route 172.16.3.0 255.255.255.0 10.112.11.254
+ip route 172.16.20.0 255.255.255.0 10.112.11.254
+ip route 172.16.21.64 255.255.255.240 10.112.11.254
+ip route 172.16.30.0 255.255.255.0 10.112.11.254
+ip route 172.16.42.0 255.255.255.0 10.112.11.254
+ip route 172.16.70.0 255.255.255.0 10.112.11.254
+ip route 172.16.73.0 255.255.255.0 10.112.11.254
+ip route 172.16.78.64 255.255.255.240 10.112.36.208
+ip route 172.16.81.0 255.255.255.0 10.112.11.254
+ip route 172.16.133.0 255.255.255.0 10.112.11.254
+ip route 172.16.141.0 255.255.255.0 10.112.11.254
+ip route 172.17.2.0 255.255.255.0 10.112.11.254
+ip route 172.17.50.0 255.255.255.0 10.112.11.254
+ip route 172.18.0.0 255.255.0.0 10.112.11.254
+ip route 172.19.0.0 255.255.0.0 10.112.11.254
+ip route 172.20.44.34 255.255.255.255 10.112.11.254
+ip route 172.22.0.0 255.255.0.0 10.112.11.254
+ip route 172.23.0.0 255.255.0.0 10.112.11.254
+ip route 172.24.15.0 255.255.255.0 10.112.11.254
+ip route 172.24.173.208 255.255.255.252 172.24.172.205
+ip route 172.24.173.209 255.255.255.255 172.24.172.205
+ip route 172.25.32.0 255.255.255.0 10.112.11.254
+ip route 172.25.34.0 255.255.255.0 10.112.11.254
+ip route 172.29.9.0 255.255.255.0 10.112.11.254
+ip route 172.29.16.0 255.255.255.0 10.112.11.254
+ip route 172.29.17.0 255.255.255.0 10.112.11.254
+ip route 172.31.1.0 255.255.255.0 10.112.11.254
+ip route 172.31.2.0 255.255.255.0 10.112.11.254
+ip route 172.31.3.0 255.255.255.0 10.112.11.254
+ip route 172.31.4.0 255.255.255.0 10.112.11.254
+ip route 172.31.11.0 255.255.255.0 10.112.11.254
+ip route 180.224.0.0 255.255.0.0 10.156.242.149
+ip route 187.51.160.26 255.255.255.255 172.24.172.205
+ip route 192.168.1.0 255.255.255.0 10.112.11.254
+ip route 192.168.4.0 255.255.255.0 10.112.11.254
+ip route 192.168.5.110 255.255.255.255 10.112.11.254
+ip route 192.168.5.127 255.255.255.255 10.112.11.254
+ip route 192.168.5.128 255.255.255.255 10.112.11.254
+ip route 192.168.6.0 255.255.255.0 10.112.11.254
+ip route 192.168.8.0 255.255.255.0 10.112.11.254
+ip route 192.168.10.100 255.255.255.255 10.112.11.254
+ip route 192.168.10.110 255.255.255.255 10.112.11.254
+ip route 192.168.10.111 255.255.255.255 10.112.11.254
+ip route 192.168.10.112 255.255.255.255 10.112.11.254
+ip route 192.168.12.0 255.255.255.0 10.112.11.254
+ip route 192.168.17.3 255.255.255.255 10.112.11.254
+ip route 192.168.20.31 255.255.255.255 10.112.11.254
+ip route 192.168.20.127 255.255.255.255 10.112.11.254
+ip route 192.168.24.0 255.255.255.0 10.112.11.254
+ip route 192.168.27.0 255.255.255.0 10.112.11.254
+ip route 192.168.28.0 255.255.255.0 10.112.11.254
+ip route 192.168.32.165 255.255.255.255 10.112.11.254
+ip route 192.168.34.0 255.255.255.0 10.112.11.254
+ip route 192.168.36.0 255.255.255.0 10.112.11.254
+ip route 192.168.37.0 255.255.255.0 10.112.11.254
+ip route 192.168.67.0 255.255.255.0 10.112.11.254
+ip route 192.168.70.0 255.255.255.192 10.112.11.254
+ip route 192.168.78.0 255.255.255.0 10.112.11.254
+ip route 192.168.79.0 255.255.255.0 10.112.11.254
+ip route 192.168.80.0 255.255.255.0 10.112.11.254
+ip route 192.168.99.0 255.255.255.0 172.24.172.205
+ip route 192.168.101.0 255.255.255.0 10.112.11.254
+ip route 192.168.160.0 255.255.255.0 172.24.172.205
+ip route 192.168.162.0 255.255.255.252 172.24.172.205
+ip route 192.168.164.252 255.255.255.252 172.24.172.205
+ip route 192.168.230.0 255.255.255.0 10.112.11.254
+ip route 192.168.250.0 255.255.255.0 10.112.11.254
+ip route 192.168.253.0 255.255.255.0 10.112.11.254
+ip route 192.168.254.0 255.255.255.0 10.112.11.254
+ip route 194.65.37.122 255.255.255.255 10.156.242.149
+ip route 194.65.37.123 255.255.255.255 10.156.242.149
+ip route 194.65.113.193 255.255.255.255 10.156.242.149
+ip route 194.65.113.199 255.255.255.255 10.156.242.149
+ip route 194.65.113.200 255.255.255.255 10.156.242.149
+ip route 194.65.141.154 255.255.255.255 10.156.242.149
+ip route 196.22.97.0 255.255.255.0 10.112.11.254
+ip route 197.159.180.65 255.255.255.255 10.112.11.254
+ip route 200.222.40.69 255.255.255.255 10.112.11.254
+ip route 201.6.109.250 255.255.255.255 10.112.11.254
+ip route 212.55.184.26 255.255.255.255 10.112.11.254
+ip route 213.12.145.109 255.255.255.255 10.112.11.254
+ip route 213.13.25.224 255.255.255.224 10.156.242.149
+ip route 213.13.26.0 255.255.255.0 10.156.242.149
+ip route 213.13.27.0 255.255.255.0 10.156.242.149
+ip route 213.13.145.0 255.255.255.0 10.156.242.149
+ip route 213.13.145.106 255.255.255.255 10.156.242.149
+!
+ip access-list extended Brasil-circuito
+ permit ip 10.51.192.0 0.0.31.255 any
+ permit ip 10.51.160.0 0.0.7.255 any
+ permit ip 10.156.247.180 0.0.0.3 any
+ deny   ip any any
+ip access-list extended CISCO-CAE
+ permit ip 172.24.12.0 0.0.0.255 any
+ip access-list extended MAI
+ permit ip any host 10.112.64.113
+ permit icmp any host 10.112.64.113
+ip access-list extended SIP-PORTO
+ permit ip any 10.112.137.0 0.0.0.255 dscp ef
+ permit ip any 10.112.138.0 0.0.0.255 dscp ef
+ permit ip any 10.112.142.104 0.0.0.7 dscp ef
+ permit ip any 172.27.194.0 0.0.0.255 dscp ef
+ permit ip any 10.112.136.0 0.0.0.255 dscp ef
+ip access-list extended SIP-TAGUS
+ permit ip any 10.112.129.0 0.0.0.255 dscp ef
+ permit ip any 192.168.90.0 0.0.0.255 dscp ef
+ permit ip any 192.168.167.0 0.0.0.255 dscp ef
+ permit ip any 10.112.128.0 0.0.0.255 dscp ef
+ip access-list extended Voip-Rtcp
+ permit udp any any range 16384 32767
+ permit udp any any range 16384 32831
+ip access-list extended management
+ permit ip any host 10.162.125.148
+ permit ip any host 10.166.110.4
+ permit ip any 10.162.205.0 0.0.0.17
+ip access-list extended premium
+ permit tcp any any eq 1720
+ permit tcp any any range 11000 11999
+ permit udp any any eq 2427
+ permit tcp any any eq 2428
+ permit tcp any any range 2000 2002
+ permit udp any any eq 1719
+ permit udp any any eq 5060
+ permit ip any host 10.161.174.140
+ permit ip any host 10.163.109.132
+ permit ip any host 10.167.128.133
+ permit ip any host 10.162.130.134
+ permit ip any host 10.166.100.36
+ permit ip any host 10.166.140.133
+ permit ip any host 10.101.0.183
+ permit ip any host 144.64.196.225
+ permit ip any host 144.64.193.35
+ permit ip any host 144.64.193.36
+ permit ip any host 144.64.193.37
+ permit ip any host 144.64.193.38
+ permit ip any host 144.64.193.40
+ permit ip any host 144.64.198.74
+ permit ip any host 144.64.198.75
+ permit ip any host 144.64.198.76
+ permit ip any host 10.163.131.21
+ permit ip any host 10.163.121.131
+ permit ip any host 10.163.121.132
+ permit ip any host 10.163.115.131
+ permit ip any host 10.163.115.132
+ permit ip any host 10.163.115.150
+ permit ip any host 10.163.115.151
+ permit ip any host 10.163.123.115
+ permit ip any host 10.163.123.116
+ permit ip any host 10.163.123.117
+ permit ip any host 10.163.102.54
+ip access-list extended proxyBypass
+ permit ip any 10.0.2.0 0.0.0.255
+ permit ip any 10.0.5.0 0.0.0.255
+ permit ip any 192.168.4.0 0.0.0.255
+ permit ip any 192.168.230.0 0.0.0.255
+ permit ip any host 10.36.8.19
+ permit ip any host 10.36.8.8
+ permit ip any host 192.168.17.3
+ permit ip any host 192.168.5.110
+ permit ip any host 192.168.5.127
+ permit ip any host 192.168.5.128
+ permit ip any 192.168.28.0 0.0.0.255
+ permit ip any 192.168.6.0 0.0.0.255
+ permit ip any 192.168.8.0 0.0.0.255
+ permit ip any host 192.168.10.100
+ permit ip any host 192.168.10.110
+ permit ip any host 192.168.10.111
+ permit ip any host 192.168.10.112
+ permit ip any 192.168.24.0 0.0.0.255
+ permit ip any 192.168.27.0 0.0.0.255
+ permit ip any 10.251.129.0 0.0.0.255
+ permit ip any 180.237.2.0 0.0.0.255
+ permit ip any 10.111.3.0 0.0.0.255
+ permit ip any 172.30.6.0 0.0.0.255
+ permit ip any 172.30.19.0 0.0.0.255
+ permit ip any 172.30.65.0 0.0.0.255
+ permit ip any 172.30.66.0 0.0.0.255
+ permit ip any 172.30.67.0 0.0.0.255
+ permit ip any 172.30.69.0 0.0.0.255
+ permit ip any 10.101.0.0 0.0.0.255
+ permit ip any 10.101.1.0 0.0.0.255
+ permit ip any 180.142.45.0 0.0.0.255
+ permit ip any 180.142.105.0 0.0.0.255
+ permit ip any 180.142.106.0 0.0.0.255
+ permit ip any 180.142.251.0 0.0.0.255
+ permit ip any 180.234.90.0 0.0.0.255
+ permit ip any 180.234.105.0 0.0.0.255
+ permit ip any 180.235.90.0 0.0.0.255
+ permit ip any 180.244.90.0 0.0.0.255
+ permit ip any 180.244.100.0 0.0.0.255
+ permit ip any host 180.246.50.13
+ permit ip any 10.251.131.0 0.0.0.255
+ permit ip any 180.249.90.0 0.0.0.255
+ permit ip any 180.254.80.0 0.0.0.255
+ permit ip any 180.254.90.0 0.0.0.255
+ permit ip any host 194.65.141.1
+ permit ip any host 10.250.240.64
+ permit ip any host 10.250.240.96
+ permit ip any host 10.250.240.32
+ permit ip any host 194.65.126.120
+ permit ip any 180.239.17.0 0.0.0.255
+ permit ip any 180.239.19.0 0.0.0.255
+ permit ip any 180.239.27.0 0.0.0.255
+ permit ip any 180.239.50.0 0.0.0.255
+ permit ip any 180.239.73.0 0.0.0.255
+ permit ip any 180.251.129.0 0.0.0.255
+ permit ip any 192.168.200.0 0.0.0.255
+ permit ip any 192.168.202.0 0.0.0.255
+ permit ip any 10.251.132.0 0.0.0.255
+ permit ip any 10.103.48.128 0.0.0.127
+ permit ip any 10.103.72.0 0.0.3.255
+ permit ip any 10.103.76.0 0.0.1.255
+ permit ip any 172.27.0.0 0.0.255.255
+ permit ip any 192.168.89.0 0.0.0.255
+ permit ip any 192.168.88.0 0.0.0.255
+ permit tcp any host 192.168.123.132 eq 3389
+ permit tcp any host 192.168.120.254 eq www
+ permit tcp any host 192.168.119.1 eq 22
+ permit tcp host 10.112.70.20 host 213.13.145.109 eq www
+ permit ip any 172.31.1.0 0.0.0.255
+ permit ip any 172.31.2.0 0.0.0.255
+ permit ip any 172.31.3.0 0.0.0.255
+ permit ip any 172.31.4.0 0.0.0.255
+ permit udp 10.112.12.0 0.0.0.255 host 194.65.138.126 eq ntp
+ permit udp 10.112.11.0 0.0.0.255 host 194.65.138.126 eq ntp
+ permit udp any any eq 3653
+ permit ip host 10.112.15.121 any
+ permit ip host 10.112.15.122 any
+ permit ip host 10.112.57.30 any
+ permit ip host 10.112.24.57 any
+ permit ip host 10.112.24.58 any
+ permit ip host 10.112.88.84 any
+ permit icmp any any
+ permit tcp any any eq ftp
+ permit tcp any any eq ftp-data
+ permit tcp any any eq 5222
+ permit tcp any any eq 5060
+ permit tcp any any eq 5070
+ permit udp any any eq 5070
+ permit udp any any eq 5060
+ permit udp any any gt 29999
+ deny   udp any any gt 45001
+ permit tcp host 10.112.15.31 any eq www
+ permit tcp host 10.112.15.31 any eq 443
+ permit ip host 10.112.15.99 any
+ permit tcp host 10.112.15.16 any eq www
+ permit ip host 10.112.15.33 any
+ permit ip host 10.112.15.8 any
+ permit tcp host 10.112.15.36 any eq smtp
+ permit tcp host 10.112.15.37 any eq smtp
+ permit ip host 10.112.15.156 any
+ permit ip host 10.112.15.157 any
+ permit tcp host 10.112.29.3 host 185.17.230.19 eq 22
+ permit tcp host 10.112.250.128 any eq 1194
+ permit tcp host 10.112.250.128 any eq 22
+ permit tcp host 10.112.250.128 any eq 465
+ permit tcp host 10.112.250.128 any eq 993
+ permit ip any host 194.65.152.179
+ permit ip host 10.112.29.33 any
+ permit ip 10.112.220.0 0.0.3.255 any
+ permit ip host 10.112.99.126 host 200.222.40.69
+ permit tcp host 10.112.24.41 host 192.12.232.18 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 83.240.242.186 eq smtp
+ permit tcp 10.112.0.0 0.0.255.255 host 83.240.242.186 eq 993
+ permit ip host 10.112.24.39 any
+ permit ip host 10.112.24.68 any
+ permit ip host 10.112.24.104 any
+ permit ip host 10.112.24.103 any
+ permit ip host 10.112.24.88 any
+ permit ip host 10.112.24.80 any
+ permit ip host 10.112.24.76 any
+ permit ip host 10.112.24.75 any
+ permit ip host 10.112.24.62 any
+ permit ip host 10.112.24.55 any
+ permit ip host 10.112.24.52 any
+ permit ip host 10.112.24.50 any
+ permit ip host 10.112.24.33 any
+ permit ip host 10.112.24.25 any
+ permit ip host 10.112.24.17 any
+ permit ip host 10.112.24.3 any
+ permit ip host 10.112.24.151 any
+ permit ip host 10.112.250.23 any
+ permit tcp host 10.112.88.28 host 93.108.226.186 eq 443
+ permit tcp host 10.112.88.93 any eq pop3
+ permit tcp host 10.112.88.93 any eq smtp
+ permit ip host 10.112.24.142 any
+ permit ip host 10.112.24.140 any
+ permit ip 10.112.90.0 0.0.0.255 any
+ permit tcp host 10.112.67.14 any eq 443
+ permit tcp host 10.112.67.14 any eq www
+ permit tcp host 10.112.26.209 any eq 443
+ permit tcp host 10.112.26.209 any eq www
+ permit ip host 10.112.57.10 any
+ permit ip host 10.112.57.20 any
+ permit tcp host 10.112.27.37 any eq 8080
+ permit tcp host 10.112.27.37 any eq www
+ permit tcp host 10.112.27.37 any eq ftp-data
+ permit tcp host 10.112.27.37 any eq ftp
+ permit tcp host 10.112.16.25 any eq www
+ permit tcp host 10.112.16.25 any eq 443
+ permit ip host 10.112.57.110 any
+ permit tcp host 10.112.72.14 any eq 22
+ permit ip host 10.112.24.10 any
+ permit ip host 10.112.203.151 any
+ permit ip host 10.112.203.152 any
+ permit ip host 10.112.203.153 any
+ permit udp host 10.112.25.43 host 194.65.126.17 eq 5092
+ permit ip host 10.112.25.139 any
+ permit ip host 10.112.25.134 any
+ permit tcp host 10.112.14.1 any eq www
+ permit tcp host 10.112.14.1 any eq 443
+ permit tcp host 10.112.14.2 any eq www
+ permit tcp host 10.112.14.2 any eq 443
+ permit tcp host 10.112.14.10 any eq www
+ permit tcp host 10.112.14.10 any eq 443
+ permit tcp host 10.112.14.11 any eq www
+ permit tcp host 10.112.14.11 any eq 443
+ permit tcp host 10.112.14.13 any eq www
+ permit tcp host 10.112.14.13 any eq 443
+ permit tcp host 10.112.14.14 any eq www
+ permit tcp host 10.112.14.14 any eq 443
+ permit tcp host 10.112.14.16 any eq www
+ permit tcp host 10.112.14.16 any eq 443
+ permit tcp host 10.112.14.17 any eq www
+ permit tcp host 10.112.14.17 any eq 443
+ permit tcp host 10.112.14.34 any eq www
+ permit tcp host 10.112.14.34 any eq 443
+ permit tcp host 10.112.14.35 any eq www
+ permit tcp host 10.112.14.35 any eq 443
+ permit tcp host 10.112.14.51 any eq www
+ permit tcp host 10.112.14.51 any eq 443
+ permit tcp any host 193.136.92.69 eq 22
+ permit ip any 172.31.112.0 0.0.0.255
+ permit ip any 172.31.114.0 0.0.0.255
+ permit ip any 172.31.127.0 0.0.0.255
+ permit tcp 10.112.200.0 0.0.3.255 host 192.168.169.253 eq 443
+ permit tcp 10.112.208.0 0.0.3.255 host 192.168.169.253 eq 443
+ permit tcp 10.112.200.0 0.0.3.255 host 192.168.169.253 eq 22
+ permit tcp 10.112.208.0 0.0.3.255 host 192.168.169.253 eq 22
+ permit ip host 10.112.28.81 any
+ permit tcp any host 140.98.193.112 eq www
+ permit tcp any host 140.98.193.63 eq www
+ permit ip host 10.112.88.4 any
+ permit tcp host 10.112.72.12 any eq 22
+ permit ip host 10.112.72.11 any
+ permit tcp host 10.112.15.217 any eq 443
+ permit tcp host 10.112.15.216 any eq 443
+ permit tcp host 10.112.27.71 any eq 443
+ permit tcp host 10.112.27.71 any eq 9443
+ permit tcp host 10.112.27.71 any eq 8080
+ permit tcp host 10.112.27.71 any eq www
+ permit ip host 10.112.29.200 host 194.65.22.26
+ permit ip host 10.112.48.83 any
+ permit tcp host 10.112.104.12 any eq 443
+ permit tcp host 10.112.161.7 any eq www
+ permit tcp host 10.112.29.73 any eq 873
+ permit udp host 10.112.29.73 any eq 873
+ permit tcp host 10.112.15.134 any eq www
+ permit tcp host 10.112.15.134 any eq 443
+ permit ip 10.112.200.0 0.0.3.255 host 192.3.94.20
+ permit tcp any 132.245.0.0 0.0.255.255 eq 443
+ permit tcp any 132.245.0.0 0.0.255.255 eq www
+ permit tcp any 157.55.59.128 0.0.0.127 eq 443
+ permit tcp any 157.55.59.128 0.0.0.127 eq www
+ permit tcp any 157.55.155.0 0.0.0.127 eq 443
+ permit tcp any 157.55.155.0 0.0.0.127 eq www
+ permit tcp any 157.55.130.0 0.0.0.127 eq 443
+ permit tcp any 157.55.130.0 0.0.0.127 eq www
+ permit tcp any 157.55.145.0 0.0.0.127 eq 443
+ permit tcp any 157.55.145.0 0.0.0.127 eq www
+ permit tcp any 157.56.55.0 0.0.0.127 eq 443
+ permit tcp any 157.56.55.0 0.0.0.127 eq www
+ permit tcp any 157.56.58.0 0.0.0.127 eq 443
+ permit tcp any 157.56.58.0 0.0.0.127 eq www
+ permit tcp any 157.55.227.192 0.0.0.63 eq 443
+ permit tcp any 157.55.227.192 0.0.0.63 eq www
+ permit tcp any 207.46.150.128 0.0.0.127 eq 443
+ permit tcp any 207.46.150.128 0.0.0.127 eq www
+ permit tcp any 207.46.198.0 0.0.0.127 eq 443
+ permit tcp any 207.46.198.0 0.0.0.127 eq www
+ permit tcp any 213.199.182.128 0.0.0.127 eq 443
+ permit tcp any 213.199.182.128 0.0.0.127 eq www
+ permit ip host 10.112.88.19 any
+ permit ip host 10.112.40.5 any
+ permit tcp host 10.112.250.78 host 62.28.253.239 eq 3389
+ permit tcp host 10.112.250.26 host 62.28.253.239 eq 3389
+ permit ip host 10.112.29.21 any
+ permit ip host 10.23.96.13 any
+ permit ip host 10.23.96.14 any
+ permit ip host 10.23.96.15 any
+ permit tcp host 10.112.180.118 host 176.34.231.54 eq 5080
+ permit udp host 10.112.180.118 host 176.34.231.54 eq 5080
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.148.17 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.148.20 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.149.17 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.149.20 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.150.17 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.150.20 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.151.17 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 199.168.151.20 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 208.100.40.44 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 203.116.198.107 eq www
+ permit ip 10.112.0.0 0.0.255.255 194.65.37.64 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 216.52.207.64 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 199.168.149.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 208.100.40.32 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 67.202.75.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 8.28.177.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 216.52.185.64 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 72.5.190.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 8.28.150.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 216.177.207.224 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 72.52.96.0 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 216.218.133.192 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 64.62.169.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 8.25.203.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 199.168.148.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 8.19.13.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 209.51.184.0 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 216.66.5.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 66.151.103.0 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 8.28.19.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 70.42.29.0 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 122.152.140.64 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 115.112.233.64 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 202.130.161.192 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 115.112.231.96 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 221.135.132.136 0.0.0.7
+ permit ip 10.112.0.0 0.0.255.255 49.236.207.160 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 122.54.235.128 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 203.116.198.64 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 202.147.29.192 0.0.0.63
+ permit ip 10.112.0.0 0.0.255.255 211.13.205.128 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 95.172.88.0 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 82.220.1.192 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 95.172.68.144 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 31.186.227.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 62.67.237.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 188.116.35.32 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 212.118.224.144 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 95.172.74.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 109.234.81.160 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 94.25.128.112 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 89.191.7.16 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 77.242.201.48 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 31.186.238.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 77.242.202.224 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 81.91.3.0 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 200.29.13.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 177.84.160.208 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 190.102.136.240 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 197.156.241.224 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 196.23.154.64 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 196.23.147.192 0.0.0.31
+ permit ip 10.112.0.0 0.0.255.255 host 80.172.226.76
+ permit ip 10.112.204.0 0.0.0.255 194.65.37.64 0.0.0.63
+ permit ip host 10.112.16.121 host 144.76.111.49
+ permit tcp 10.0.0.0 0.255.255.255 host 194.65.138.126 eq 22
+ permit 132 host 10.112.180.56 host 172.31.2.20
+ permit tcp any host 138.91.60.198 eq 22
+ permit udp any host 138.91.60.198 eq 22
+ permit tcp host 10.112.76.122 any eq www
+ permit tcp host 10.112.76.122 any eq 443
+ permit tcp host 10.112.76.122 any eq 2375
+ permit tcp host 10.112.76.122 any eq 2376
+ permit tcp host 10.112.76.122 any eq 5000
+ permit tcp host 10.112.76.122 any eq domain
+ permit udp host 10.112.76.122 any eq domain
+ permit ip 10.112.0.0 0.0.255.255 host 194.65.74.132
+ permit ip 10.112.0.0 0.0.255.255 host 81.90.52.74
+ permit ip 10.112.0.0 0.0.255.255 host 177.75.176.5
+ permit tcp 10.112.0.0 0.0.255.255 host 200.233.116.146 eq 13392
+ permit tcp 10.112.0.0 0.0.255.255 host 83.240.239.170 eq 7780
+ permit ip 10.112.0.0 0.0.255.255 host 201.54.32.4
+ permit ip 10.112.0.0 0.0.255.255 host 196.3.94.20
+ permit ip 10.112.0.0 0.0.255.255 host 212.96.26.198
+ permit ip 10.112.0.0 0.0.255.255 host 195.8.8.6
+ permit ip 10.112.0.0 0.0.255.255 host 195.8.8.30
+ permit ip 10.112.0.0 0.0.255.255 host 195.8.8.27
+ permit ip 10.112.0.0 0.0.255.255 host 195.8.8.28
+ permit ip 10.112.0.0 0.0.255.255 host 202.72.107.250
+ permit ip 10.112.0.0 0.0.255.255 host 202.72.104.28
+ permit ip 10.112.0.0 0.0.255.255 host 189.77.118.101
+ permit ip 10.112.0.0 0.0.255.255 41.221.192.192 0.0.0.15
+ permit ip 10.112.0.0 0.0.255.255 host 41.221.192.164
+ permit ip 10.112.0.0 0.0.255.255 host 41.223.159.2
+ permit ip 10.112.0.0 0.0.255.255 host 195.8.20.42
+ permit ip 10.112.0.0 0.0.255.255 host 41.137.220.92
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.3.232 eq www
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.3.232 eq 443
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.2.50 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.2.54 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.2.57 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.3.242 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.1 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.2 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.3 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.9 eq 22
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.13 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.17 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.18 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.23 range 22001 22002
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.25 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 host 195.8.8.26 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 192.168.122.0 0.0.0.255 eq 443
+ permit tcp 10.112.0.0 0.0.255.255 192.168.122.0 0.0.0.255 eq telnet
+ permit tcp 10.112.0.0 0.0.255.255 192.168.122.0 0.0.0.255 eq www
+ permit tcp 10.112.0.0 0.0.255.255 192.168.122.0 0.0.0.255 eq 22
+ permit tcp 10.112.0.0 0.0.255.255 192.168.122.0 0.0.0.255 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 192.168.122.0 0.0.0.255 eq 902
+ permit tcp 10.112.0.0 0.0.255.255 192.168.127.0 0.0.0.255 eq 22
+ permit tcp 10.112.0.0 0.0.255.255 192.168.127.0 0.0.0.255 eq 3389
+ permit tcp 10.112.0.0 0.0.255.255 192.168.127.0 0.0.0.255 eq www
+ permit ip 10.112.0.0 0.0.255.255 213.13.16.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 213.13.19.0 0.0.0.255
+ permit ip 10.112.0.0 0.0.255.255 213.13.24.0 0.0.0.255
+ permit tcp 10.112.0.0 0.0.255.255 host 62.28.167.122 eq 10011
+ permit tcp 10.112.0.0 0.0.255.255 host 62.28.167.122 eq 10012
+ permit tcp 10.112.0.0 0.0.255.255 host 185.17.229.168 eq 3478
+ permit tcp 10.112.0.0 0.0.255.255 host 185.17.229.168 range 65530 65535
+ permit ip 10.112.0.0 0.0.255.255 host 200.141.223.158
+ permit ip 10.112.0.0 0.0.255.255 host 200.141.223.126
+ permit ip 10.112.0.0 0.0.255.255 host 213.13.146.75
+ permit ip 10.112.0.0 0.0.255.255 host 194.65.95.90
+ permit ip 10.112.0.0 0.0.255.255 host 200.169.219.2
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.132
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.133
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.134
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.135
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.138
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.139
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.141
+ permit ip 10.112.0.0 0.0.255.255 host 88.214.177.142
+ permit ip 10.112.0.0 0.0.255.255 host 196.32.193.254
+ip access-list extended ransomware
+ permit tcp any any eq 445 log
+ deny   tcp any any eq 445 log
+ permit ip any any
+ip access-list extended ransomware_novo
+ deny   tcp any any eq 135 log
+ permit ip any any
+ip access-list extended silver
+ permit ip any host 10.163.137.120
+ permit ip any host 10.163.118.139
+ permit ip any host 10.163.118.175
+ permit ip any host 10.163.112.76
+ permit ip any host 10.163.118.172
+ permit ip any host 10.163.118.227
+ permit ip any host 10.163.118.228
+ permit ip any host 10.163.118.229
+ permit ip any host 10.163.118.230
+ permit ip any host 10.166.101.115
+ permit ip any host 10.166.101.116
+ permit ip any host 10.166.101.117
+ permit ip any host 10.163.122.207
+ permit ip any host 10.163.185.21
+ permit ip any host 10.162.126.243
+ permit ip any host 10.162.107.100
+ permit ip any host 10.162.107.133
+ permit ip any host 10.162.125.58
+ permit ip any host 144.64.193.43
+ permit ip any host 144.64.199.60
+ permit ip any host 144.64.176.193
+ permit ip any host 194.65.22.129
+ permit ip any host 194.65.22.189
+ permit ip any host 192.166.110.9
+ permit ip any host 144.64.200.225
+ permit ip any host 144.64.197.173
+ permit ip any 10.162.130.64 0.0.0.63
+ip access-list extended static_ptnet
+ permit ip 10.20.209.0 0.0.0.255 any
+ permit ip 10.20.208.128 0.0.0.127 any
+ permit ip host 10.51.160.38 any log
+ permit ip 10.51.160.0 0.0.15.255 any log
+ permit ip 10.51.200.0 0.0.1.255 any log
+!
+ip radius source-interface GigabitEthernet0/0.11 
+logging trap debugging
+logging facility local5
+logging source-interface Loopback0
+logging 10.112.15.30
+logging 10.162.125.148
+logging 10.163.121.70
+logging 10.166.110.4
+access-list 10 permit 172.25.13.171
+access-list 10 permit 172.25.13.172
+access-list 10 permit 172.25.13.211
+access-list 10 permit 172.25.13.215
+access-list 10 permit 172.25.13.198
+access-list 10 permit 213.13.150.184
+access-list 10 permit 10.0.0.0 0.255.255.255
+access-list 10 permit 144.64.0.0 0.0.255.255
+access-list 10 permit 172.20.0.0 0.0.255.255
+access-list 10 permit 172.20.11.0 0.0.0.255
+access-list 10 permit 172.20.13.0 0.0.0.255
+access-list 10 permit 172.20.22.0 0.0.0.255
+access-list 10 permit 172.20.23.0 0.0.0.255
+access-list 10 permit 172.20.44.0 0.0.0.255
+access-list 10 permit 172.20.89.0 0.0.0.255
+access-list 10 permit 172.20.255.0 0.0.0.255
+access-list 10 permit 172.23.33.0 0.0.0.255
+access-list 10 permit 172.25.0.0 0.0.255.255
+access-list 10 permit 172.27.110.0 0.0.0.255
+access-list 10 permit 172.27.140.0 0.0.0.255
+access-list 10 permit 172.28.1.0 0.0.0.255
+access-list 10 permit 172.28.47.0 0.0.0.255
+access-list 10 permit 172.28.158.0 0.0.0.255
+access-list 10 permit 172.28.164.0 0.0.0.255
+access-list 10 permit 172.28.165.0 0.0.0.255
+access-list 10 permit 172.28.180.0 0.0.0.255
+access-list 10 permit 172.28.181.0 0.0.0.255
+access-list 10 permit 172.28.183.0 0.0.0.255
+access-list 10 permit 172.28.184.0 0.0.0.255
+access-list 10 permit 172.29.0.0 0.0.0.255
+access-list 10 permit 172.29.18.0 0.0.0.255
+access-list 10 permit 172.29.64.0 0.0.0.255
+access-list 10 permit 172.30.2.0 0.0.0.255
+access-list 10 permit 172.30.6.0 0.0.0.255
+access-list 10 permit 172.30.66.0 0.0.0.255
+access-list 10 permit 172.30.69.0 0.0.0.255
+access-list 10 permit 180.142.45.0 0.0.0.255
+access-list 10 permit 180.142.105.0 0.0.0.255
+access-list 10 permit 180.142.106.0 0.0.0.255
+access-list 10 permit 180.142.251.0 0.0.0.255
+access-list 10 permit 180.234.0.0 0.1.255.255
+access-list 10 permit 180.236.0.0 0.3.255.255
+access-list 10 permit 180.242.0.0 0.0.255.255
+access-list 10 permit 180.246.0.0 0.0.255.255
+access-list 10 permit 180.244.0.0 0.3.255.255
+access-list 10 permit 180.254.0.0 0.0.255.255
+access-list 10 permit 192.168.87.0 0.0.0.255
+access-list 10 permit 192.168.92.0 0.0.0.255
+access-list 10 permit 192.168.110.0 0.0.0.255
+access-list 10 permit 192.168.111.0 0.0.0.255
+access-list 10 permit 192.168.114.0 0.0.0.255
+access-list 10 permit 192.168.129.0 0.0.0.255
+access-list 10 permit 192.168.248.0 0.0.0.255
+access-list 150 permit tcp 10.112.34.0 0.0.0.255 eq smtp any
+access-list 150 permit tcp 10.112.34.0 0.0.0.255 any eq smtp
+access-list 199 permit icmp any host 192.168.4.50
+access-list 199 permit icmp host 192.168.4.50 any
+access-list dynamic-extended
+!
+route-map SIP-OUT permit 10
+ match ip address SIP-TAGUS
+ set ip next-hop 172.31.17.2
+!
+route-map SIP-OUT permit 20
+ match ip address SIP-PORTO
+ set ip next-hop 172.31.17.6
+!
+route-map SIP-OUT permit 30
+!
+route-map static_ptnet permit 10
+ match ip address static_ptnet
+!
+route-map CISCO-CAE permit 10
+ match ip address CISCO-CAE
+ set ip next-hop 10.112.10.251
+!
+!
+snmp-server community gest4ptin RO
+snmp-server community networkactivator RO
+snmp-server community public RO
+snmp-server ifindex persist
+snmp-server host 10.162.205.27 public  snmp
+snmp-server host 10.163.121.70 public  snmp
+radius-server timeout 1
+!
+radius server PTNET1
+ address ipv4 10.162.125.148 auth-port 1812 acct-port 1813
+ key 7 070E375E5D0C1A171206042D250B
+!
+radius server PTNET2
+ address ipv4 10.166.110.4 auth-port 1812 acct-port 1813
+ key 7 12181305010E0F162F3F2B091214
+!
+radius server RadiusPTINS
+ address ipv4 10.112.15.30 auth-port 1812 acct-port 1813
+ key 7 13361F131909001A3C200B3A26211C35170708434A
+!
+!
+!
+control-plane
+!
+!
+privilege exec level 6 traceroute
+privilege exec level 6 ping
+privilege exec level 6 show configuration
+privilege exec level 6 show interfaces
+privilege exec level 6 show
+banner login 
+******************************************************************************
+     AVR03RTR001: O DIREITO DE ACESSO A ESTE SISTEMA E' RESERVADO !!              
+******************************************************************************
+*    Os Sistemas Internos da PT Comunicacoes destinam-se a ser utilizados    *
+*    exclusivamente para fins de negocios desta empresa ou para qualquer     *
+*             tarefa previamente autorizada pela administracao.              *
+*                                                                            *
+*      Qualquer tentativa ilegal de acesso, mesmo quando rejeitada, esta'    *
+*                 sujeita a procedimento civil e criminal.                   *
+*    Se nao esta' autorizado pela PT Comunicacoes a aceder a este sistema,   *
+*                     por favor DESLIGUE imediatamente.                      *
+******************************************************************************
+Este sistema esta' sujeito a auditorias efectuadas a qualquer momento.    
+******************************************************************************
+
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport input all
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 0
+ transport input all
+ transport output all
+line vty 5 16
+ transport input all
+!
+!
+monitor session 1 source interface Gi0/1/0 , Gi0/1/2
+monitor session 1 destination interface Gi0/1/7
+scheduler allocate 20000 1000
+ntp server 10.167.50.10 source GigabitEthernet0/0
+ntp server 10.167.50.11 source GigabitEthernet0/0
+ntp server 10.162.125.148 source GigabitEthernet0/0
+end

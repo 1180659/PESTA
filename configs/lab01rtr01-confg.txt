@@ -1,0 +1,450 @@
+
+!
+! Last configuration change at 16:53:37 GMT Thu Jan 10 2019 by afeliz
+! NVRAM config last updated at 16:53:40 GMT Thu Jan 10 2019 by afeliz
+!
+version 12.4
+service timestamps debug datetime msec localtime
+service timestamps log datetime msec localtime
+service password-encryption
+!
+hostname lab01rtr01
+!
+boot-start-marker
+boot system flash flash:c3825-spservicesk9-mz.123-14.T6.bin
+boot-end-marker
+!
+logging message-counter syslog
+logging buffered 4096
+no logging console
+enable secret 5 $1$hB/F$Oe2yABeAbAC5nKpW1d4xH0
+!
+aaa new-model
+!
+!
+aaa authentication login default group radius local
+aaa authorization exec default group radius local 
+aaa accounting exec default
+ action-type start-stop
+ group radius
+!
+!
+!
+aaa session-id common
+clock timezone GMT 0
+clock summer-time GMTDST recurring last Sun Mar 1:00 last Sun Oct 2:00
+!
+dot11 syslog
+no ip source-route
+!
+!
+ip cef
+!
+!
+ip domain list rin.telecom.pt
+ip domain list net.telecom.pt
+ip domain list telecom.pt
+ip domain name rin.telecom.pt
+ip name-server 10.162.125.148
+ip name-server 10.156.29.225
+ip name-server 10.156.93.225
+ip name-server 144.64.192.97
+ip name-server 144.64.192.98
+ip multicast-routing 
+no ipv6 cef
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username doprdd2 secret 5 $1$Ht5i$MWxf6xHYWCnTZFeo232C61
+username dtiseg secret 5 $1$hbWj$MUcOGMGks0WJfRbyiazsU.
+username dswseg secret 5 $1$HM/l$1zkNEewltpfyM9OIeYJRj/
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+  hidekeys
+!
+!
+ip tftp source-interface Loopback0
+ip ssh time-out 60
+ip ssh authentication-retries 2
+ip ssh version 2
+ip scp server enable
+!
+track 1 interface Loopback0 line-protocol
+!
+track 10 ip route 0.0.0.0 0.0.0.0 reachability
+!
+track 201 list boolean and
+ object 1
+!
+class-map match-any management
+ match access-group name management
+class-map match-any silver
+ match access-group name silver
+class-map match-any voice
+ match  dscp ef 
+ match ip dscp ef 
+class-map match-any premium
+ match access-group name premium
+!
+!
+policy-map qos-rin-remotos
+ class voice
+    priority percent 25
+  set precedence 5
+ class management
+    bandwidth percent 5
+  set precedence 2
+ class premium
+    bandwidth percent 20
+  set precedence 4
+ class silver
+    bandwidth percent 20
+  set precedence 1
+ class class-default
+  set precedence 0
+    fair-queue
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.156.252.169 255.255.255.255
+ ip pim sparse-dense-mode
+!
+interface GigabitEthernet0/0
+ description Ligacao LAN (lab01swd01-ge.1.3) 1000Mbps (patch F.O.)
+ no ip address
+ no ip proxy-arp
+ ip pim sparse-dense-mode
+ ip igmp join-group 239.255.255.1
+ load-interval 30
+ duplex full
+ speed 1000
+ media-type sfp
+ negotiation auto
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.156.134.172 255.255.255.240
+ standby 0 ip 10.156.134.174
+ standby 0 priority 110
+ standby 0 preempt
+!
+interface GigabitEthernet0/0.99
+ bandwidth 1000000
+ encapsulation dot1Q 99
+ ip address 10.156.135.81 255.255.255.248
+ ip directed-broadcast 20
+ ip pim sparse-dense-mode
+!
+interface GigabitEthernet0/0.200
+ encapsulation dot1Q 200
+ ip address 10.176.227.125 255.255.255.128
+ ip helper-address 10.166.140.21
+ ip helper-address 10.162.140.22
+ ip helper-address 10.20.208.3
+ ip helper-address 10.162.190.215
+ ip helper-address 10.114.167.196
+ ip nbar protocol-discovery
+ standby 1 ip 10.176.227.126
+ standby 1 priority 105
+ standby 1 preempt
+ standby 1 track 10 decrement 15
+!
+interface GigabitEthernet0/0.210
+ encapsulation dot1Q 210
+ ip address 10.176.227.253 255.255.255.128
+ ip helper-address 10.20.208.3
+ ip helper-address 10.166.140.21
+ ip helper-address 10.162.140.22
+ ip helper-address 10.162.190.215
+ shutdown
+!
+interface GigabitEthernet0/0.400
+ encapsulation dot1Q 400
+ ip address 10.21.227.125 255.255.255.128
+ ip helper-address 10.166.140.21
+ ip helper-address 10.162.140.22
+ ip helper-address 10.20.208.3
+ ip helper-address 10.162.190.215
+ ip helper-address 10.114.167.196
+ standby 2 ip 10.21.227.126
+ standby 2 preempt
+ standby 2 track 10 decrement 15
+!
+interface GigabitEthernet0/0.410
+ encapsulation dot1Q 410
+ shutdown
+!
+interface GigabitEthernet0/1
+ description Acesso BBIP (SR-BV1#3/2/24) 100Mbps (ETH03763 - 1001387066)
+ no ip address
+ ip pim sparse-dense-mode
+ load-interval 30
+ duplex full
+ speed 100
+ media-type rj45
+ service-policy output qos-rin-remotos
+!
+interface GigabitEthernet0/1.600
+ description Acesso VPN rin (er-bv1#ge-0/0/0.64) 100Mbps (ec01961 - 1009602664)
+ encapsulation dot1Q 600
+ ip address 10.156.251.206 255.255.255.252
+ ip flow egress
+ no cdp enable
+!
+interface GigabitEthernet0/1.700
+!
+router eigrp 100
+ auto-summary
+!
+router bgp 64627
+ no synchronization
+ bgp log-neighbor-changes
+ redistribute connected
+ neighbor 10.156.135.82 remote-as 64627
+ neighbor 10.156.135.82 next-hop-self
+ neighbor 10.156.135.82 soft-reconfiguration inbound
+ neighbor 10.156.251.205 remote-as 15525
+ neighbor 10.156.251.205 soft-reconfiguration inbound
+ neighbor 10.156.251.205 route-map SETLOCALPREFIN_ODD in
+ no auto-summary
+!
+ip forward-protocol nd
+no ip forward-protocol udp tftp
+no ip forward-protocol udp domain
+no ip forward-protocol udp time
+no ip forward-protocol udp netbios-ns
+no ip forward-protocol udp netbios-dgm
+no ip forward-protocol udp tacacs
+no ip http server
+no ip http secure-server
+!
+!
+ip pim rp-address 10.156.252.169
+ip pim autorp listener
+!
+ip access-list standard DENY_DEFAULT_ROUTE
+ deny   0.0.0.0
+ permit any
+ip access-list standard LOCALPREFIN
+ permit 144.64.0.0 0.0.127.255
+ permit 10.156.0.0 0.0.127.255
+ permit 10.157.0.0 0.0.127.255
+ permit 10.20.0.0 0.0.127.255
+ permit 192.168.0.0 0.0.127.255
+ip access-list standard LOCALPREFIN_EVEN
+ permit 0.0.0.0 255.255.254.255
+ip access-list standard LOCALPREFIN_ODD
+ permit 0.0.1.0 255.255.254.255
+!
+ip access-list extended Voip-Rtcp
+ permit udp any any range 16384 32767
+ip access-list extended management
+ permit ip any host 10.162.125.148
+ permit ip any host 10.166.110.4
+ permit ip any 10.162.205.0 0.0.0.17
+ip access-list extended premium
+ permit tcp any any eq 1720
+ permit tcp any any range 11000 11999
+ permit udp any any eq 2427
+ permit tcp any any eq 2428
+ permit tcp any any range 2000 2002
+ permit udp any any eq 1719
+ permit udp any any eq 5060
+ permit ip any host 10.167.128.133
+ permit ip any host 10.162.130.134
+ permit ip any host 10.166.100.36
+ permit ip any host 10.166.140.133
+ permit ip any host 10.101.0.183
+ permit ip any host 144.64.196.225
+ permit ip any host 144.64.193.35
+ permit ip any host 144.64.193.36
+ permit ip any host 144.64.193.37
+ permit ip any host 144.64.193.38
+ permit ip any host 144.64.193.40
+ permit ip any host 144.64.198.74
+ permit ip any host 144.64.198.75
+ permit ip any host 144.64.198.76
+ permit ip any host 10.163.131.21
+ permit ip any host 10.163.121.131
+ permit ip any host 10.163.121.132
+ permit ip any host 10.163.115.131
+ permit ip any host 10.163.115.132
+ permit ip any host 10.163.115.150
+ permit ip any host 10.163.115.151
+ permit ip any host 10.163.123.115
+ permit ip any host 10.163.123.116
+ permit ip any host 10.163.123.117
+ permit ip any host 10.163.102.54
+ip access-list extended silver
+ permit ip any host 10.163.137.120
+ permit ip any host 10.163.112.76
+ permit ip any host 10.163.118.172
+ permit ip any host 10.163.118.227
+ permit ip any host 10.163.118.228
+ permit ip any host 10.163.118.229
+ permit ip any host 10.163.118.230
+ permit ip any host 10.166.101.115
+ permit ip any host 10.166.101.116
+ permit ip any host 10.166.101.117
+ permit ip any host 10.163.122.207
+ permit ip any host 10.162.126.243
+ permit ip any host 10.162.107.133
+ permit ip any host 10.162.125.58
+ permit ip any host 144.64.193.43
+ permit ip any host 144.64.199.60
+ permit ip any host 144.64.176.193
+ permit ip any host 194.65.22.129
+ permit ip any host 194.65.22.189
+ permit ip any host 192.166.110.9
+ permit ip any host 144.64.200.225
+ permit ip any host 144.64.197.173
+!
+ip radius source-interface GigabitEthernet0/0.10 
+logging trap debugging
+logging facility local5
+logging source-interface GigabitEthernet0/0.10
+logging 144.64.189.122
+logging 10.156.93.225
+logging 10.162.125.148
+logging 10.156.29.225
+logging 10.163.121.70
+logging 10.185.69.53
+logging 10.166.109.176
+logging 10.162.205.27
+access-list 12 permit 172.28.160.6
+access-list 12 permit 144.64.189.122
+access-list 13 remark #### ACL HP NNM ####
+access-list 13 permit 10.162.205.3
+access-list 13 permit 10.162.205.13
+access-list 13 permit 10.162.205.11
+access-list 13 permit 10.162.205.10
+access-list 13 permit 10.162.205.27
+access-list 20 remark #### ACL WAKE-ON-LAN ####
+access-list 20 permit 10.167.128.12
+access-list 20 permit 10.167.128.10
+access-list 20 permit 10.163.104.69
+access-list 20 permit 10.166.100.5
+!
+route-map DENY_DEFAULT permit 10
+ match ip address DENY_DEFAULT_ROUTE
+!
+route-map SETLOCALPREFIN permit 10
+ match ip address LOCALPREFIN
+ set local-preference 200
+!
+route-map SETLOCALPREFIN permit 20
+!
+route-map SETLOCALPREFIN_ODD permit 10
+ match ip address LOCALPREFIN_ODD
+ set local-preference 200
+!
+route-map SETLOCALPREFIN_EVEN permit 10
+ match ip address LOCALPREFIN_EVEN
+ set local-preference 200
+!
+route-map SETLOCALPREFIN_EVEN permit 20
+!
+!
+snmp-server view hpnnm-view system included
+snmp-server view hpnnm-view interfaces included
+snmp-server view hpnnm-view ip included
+snmp-server view hpnnm-view ifMIB included
+snmp-server view hpnnm-view ciscoMgmt included
+snmp-server view hpnnm-view linterfaces included
+snmp-server community public RO
+snmp-server community kworto RW 12
+snmp-server community hpnnm view hpnnm-view RO 13
+snmp-server trap-source Loopback0
+snmp-server location LAB Tenente Valadim, Sala 2.11 - Cisco 3845
+snmp-server contact MEO - DEO/RSI/RAI2-800207273
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps bgp
+snmp-server enable traps hsrp
+snmp-server host 10.162.205.10 version 2c dsws3g! 
+snmp-server host 10.162.205.27 version 2c dsws3g! 
+radius-server host 10.162.125.148 auth-port 1812 acct-port 1813 key 7 071C244F5C0C0D
+radius-server retransmit 1
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+banner login CCCCC
+******************************************************************************
+                      -=- Laboratsrio 211 - Tenente Valadim -=-
+
+     lab01rtr01 :  O DIREITO DE ACESSO A ESTE SISTEMA E' RESERVADO !!
+
+******************************************************************************
+*    Os Sistemas Internos da PT Comunicacoes destinam-se a ser utilizados    *
+*    exclusivamente para fins de negocios desta empresa ou para qualquer     *
+*             tarefa previamente autorizada pela administracao.              *
+*                                                                            *
+*      Qualquer tentativa ilegal de acesso, mesmo quando rejeitada, esta'    *
+*                 sujeita a procedimento civil e criminal.                   *
+*    Se nao esta' autorizado pela PT Comunicacoes a aceder a este sistema,   *
+*                     por favor DESLIGUE imediatamente.                      *
+******************************************************************************
+Este sistema esta' sujeito a auditorias efectuadas a qualquer momento.
+******************************************************************************
+
+!
+line con 0
+ exec-timeout 5 0
+line aux 0
+line vty 0 4
+ exec-timeout 5 0
+ transport input telnet ssh
+line vty 5 15
+ exec-timeout 5 0
+ transport input telnet ssh
+!
+scheduler allocate 20000 1000
+ntp source GigabitEthernet0/0.10
+ntp update-calendar
+ntp server 10.167.50.10
+ntp server 10.167.50.11
+ntp server 10.162.125.148
+ntp server 10.156.29.225
+ntp server 10.156.93.225
+event manager applet CCIE 
+ action 1 cli command "show log"
+!
+end
