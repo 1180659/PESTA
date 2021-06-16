@@ -12,14 +12,17 @@ class ValueTooLargeError(Exception):
     pass
 
 
+
 directory = os.listdir("configs")
 os.chdir("configs")
+
 overlaps = []
 to_pop = []
 to_del = []
 index = 100
 to_del_index = 0
 user = getpass.getuser()
+
 
 def get_routes_file(file):
     lists = []
