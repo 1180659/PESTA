@@ -1,6 +1,7 @@
 import ipaddress as ip
 import os
 import re
+import getpass
 from datetime import datetime
 
 from routes_class import routes, network
@@ -18,7 +19,7 @@ to_pop = []
 to_del = []
 index = 100
 to_del_index = 0
-
+user = getpass.getuser()
 
 def get_routes_file(file):
     lists = []
@@ -71,7 +72,7 @@ def pair(source):
 start_time = datetime.now()
 
 for file in directory:
-    os.chdir("C:\\Users\\p058811\\PycharmProjects\\PESTA\\configs")
+    os.chdir("C:\\Users\\%s\\PycharmProjects\\PESTA\\configs" % user)
     list_all = get_routes_file(file)
     addr_list = list_all[0]
     mask_list = list_all[1]
@@ -91,7 +92,7 @@ for file in directory:
                 y += 1
 
     file = "overlaps-" + file
-    os.chdir("C:\\Users\\p058811\\PycharmProjects\\PESTA\\overlaps")
+    os.chdir("C:\\Users\\%s\\PycharmProjects\\PESTA\\overlaps" % user)
     with open(file, 'w') as outFile:
         outFile.write("[a] overlaps [b]\n")
         outFile.write("\n%d Rotas a analisar\n\n" % (y))
