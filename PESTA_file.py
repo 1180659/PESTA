@@ -1,17 +1,20 @@
 import re
 import ipaddress as ip
 from datetime import datetime
-from routes_class import routes,network
+from routes_class import routes, network
+
 
 class ValueTooLargeError(Exception):
     """Raised when the input value is too large"""
     pass
 
+
 overlaps = []
 to_pop = []
 to_del = []
 index = 100
-to_del_index= 0
+to_del_index = 0
+
 
 def get_routes_file(file):
     lists = []
@@ -75,17 +78,16 @@ y = 0
 n_index = 0
 
 for pair in pairings:
-        x = ip.ip_network(pair[0].ip).overlaps(ip.ip_network(pair[1].ip))
-        y += 1
+    x = ip.ip_network(pair[0].ip).overlaps(ip.ip_network(pair[1].ip))
+    y += 1
 
-        if x == True:
-            if str(pair[0].gw) == str(pair[1].gw):
-                overlaps.append([pair[0], pair[1]])
-                n_index += 1
+    if x == True:
+        if str(pair[0].gw) == str(pair[1].gw):
+            overlaps.append([pair[0], pair[1]])
+            n_index += 1
 
-
-print("Teste feito a %d pares possíveis" %(y))
-print("%d Overlaps" %(n_index))
+print("Teste feito a %d pares possíveis" % (y))
+print("%d Overlaps" % (n_index))
 
 with open("overlapped.txt", 'w+') as outFile:
     outFile.write("[a] overlaps [b]\n\n")
@@ -107,10 +109,9 @@ with open("overlapped.txt", 'w+') as outFile:
                 pair2_ip, pair2_mask, overlaps[x][1].gw, overlaps[x][1].name))
         else:
             pair2_full = ("[b] ip route %s %s %s" % (pair2_ip, pair2_mask, overlaps[x][1].gw))
-        line1 = ("[%d] %s <--> %s" %(x,pair1_nw,pair2_nw))
-        line2= (pair1_full + "\n" + pair2_full)
+        line1 = ("[%d] %s <--> %s" % (x, pair1_nw, pair2_nw))
+        line2 = (pair1_full + "\n" + pair2_full)
         outFile.write(line1 + "\n" + line2 + "\n\n")
-
 
 print("Consulte o ficheiro overlapped.txt para consultar os indexs de sobreposições\n")
 prompt = "Introduza o index da rota [b] que pretende que seja eliminada ou pressione a letra 'q' para terminar: "
@@ -119,7 +120,7 @@ while index != 'q':
         try:
             index = input(prompt)
             index = int(index)
-            if index > (n_index-1):
+            if index > (n_index - 1):
                 raise ValueTooLargeError
             else:
                 to_pop.append(index)
@@ -134,7 +135,7 @@ while index != 'q':
         except ValueTooLargeError:
             prompt = "O input excede o número de entradas, tente novamente: "
 
-for ele in sorted(to_pop, reverse = True):
+for ele in sorted(to_pop, reverse=True):
     to_del.append(overlaps[ele])
     to_del_index += 1
 
@@ -144,11 +145,14 @@ with open("delete_routes.txt", 'w+') as outFile:
         delete_ip = delete_nw.network_address
         delete_mask = delete_nw.netmask
         if to_del[x][1].name != "":
-            delete_full = ("no ip route %s %s %s name %s\n" % (delete_ip,delete_mask, to_del[x][1].gw, to_del[x][1].name))
+            delete_full = (
+                        "no ip route %s %s %s name %s\n" % (delete_ip, delete_mask, to_del[x][1].gw, to_del[x][1].name))
         else:
             delete_full = ("no ip route %s %s %s\n" % (delete_ip, delete_mask, to_del[x][1].gw))
         outFile.write(delete_full)
 
 
 end_time = datetime.now()
+
 print('\nDuration: {}'.format(end_time - start_time))
+

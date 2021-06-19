@@ -12,7 +12,6 @@ class ValueTooLargeError(Exception):
     pass
 
 
-
 directory = os.listdir("configs")
 os.chdir("configs")
 
@@ -22,7 +21,7 @@ to_del = []
 index = 100
 to_del_index = 0
 user = getpass.getuser()
-
+total_pares = 0
 
 def get_routes_file(file):
     lists = []
@@ -88,6 +87,7 @@ for file in directory:
     n_index = 0
     for par in pairings:
         x = ip.ip_network(par[0].ip).overlaps(ip.ip_network(par[1].ip))
+        total_pares += 1
         if x:
             if str(par[0].gw) == str(par[1].gw):
                 overlaps.append([par[0], par[1]])
@@ -122,3 +122,15 @@ for file in directory:
             outFile.write(line1 + "\n" + line2 + "\n\n")
 
     overlaps.clear()
+try:
+    os.remove("C:\\Users\\%s\\PycharmProjects\\PESTA\\configs\\static_routes.txt" % user)
+    os.remove("C:\\Users\\%s\\PycharmProjects\\PESTA\\overlaps\\overlaps-static_routes.txt" % user)
+except Exception:
+    pass
+
+
+print("Teste feito a %d pares possíveis" % (total_pares))
+
+end_time = datetime.now()
+
+print('\nDuration: {}'.format(end_time - start_time))
