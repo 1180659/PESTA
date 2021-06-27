@@ -14,10 +14,7 @@ class ValueTooLargeError(Exception):
 
 directory = os.listdir("configs")
 os.chdir("configs")
-
 overlaps = []
-to_pop = []
-to_del = []
 index = 100
 overlap_counter = 0
 user = getpass.getuser()
