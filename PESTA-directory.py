@@ -19,7 +19,7 @@ overlaps = []
 to_pop = []
 to_del = []
 index = 100
-to_del_index = 0
+overlap_counter = 0
 user = getpass.getuser()
 total_pares = 0
 
@@ -93,6 +93,7 @@ for file in directory:
                 overlaps.append([par[0], par[1]])
                 n_index += 1
                 y += 1
+                overlap_counter += 1
 
     file = "overlaps-" + file
     os.chdir("C:\\Users\\%s\\PycharmProjects\\PESTA\\overlaps" % user)
@@ -129,7 +130,8 @@ except Exception:
     pass
 
 
-print("Teste feito a %d pares possíveis" % (total_pares))
+print("Teste feito a %d pares possíveis" % total_pares)
+print("%d Sobreposições detetadas" % overlap_counter)
 
 end_time = datetime.now()
 
